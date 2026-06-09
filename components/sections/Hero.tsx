@@ -78,9 +78,9 @@ export default function Hero() {
                 transition={{ delay: 0.2, duration: 0.7 }}
                 className="text-[2.8rem] md:text-[3.5rem] lg:text-[4rem] xl:text-[4.2rem] font-bold leading-[1.1] tracking-tight mb-6"
               >
-                <span className="text-white">Lorem Ipsum Dolor </span>
+                <span className="text-white">Transforming Ideas into </span>
                 <br />
-                <span className="gradient-text">Sit Amet Consectetur</span>
+                <span className="gradient-text">Scalable Digital Solutions</span>
               </motion.h1>
 
               {/* Sub */}
