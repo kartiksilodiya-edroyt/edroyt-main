@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://edroyt.com',
+    url: 'https://edroyt-main.vercel.app/',
     siteName: 'Edroyt',
     title: 'Edroyt | Transforming Ideas Into Scalable Digital Solutions',
     description: 'We help startups and enterprises build innovative software, AI-powered solutions, and digital experiences that accelerate business growth.',
