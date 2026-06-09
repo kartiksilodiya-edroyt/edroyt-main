@@ -1,0 +1,58 @@
+import { TeamMember } from '@/types';
+
+export const teamMembers: TeamMember[] = [
+  {
+    id: '1',
+    name: 'Alexander Mitchell',
+    role: 'Founder & CEO',
+    image: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400',
+    bio: 'Former Google engineer with 15+ years in software development. Alex leads Edroyt\'s vision and strategic direction.',
+    linkedin: '#',
+    twitter: '#',
+  },
+  {
+    id: '2',
+    name: 'Dr. Emily Zhang',
+    role: 'Chief Technology Officer',
+    image: 'https://images.pexels.com/photos/3756679/pexels-photo-3756679.jpeg?auto=compress&cs=tinysrgb&w=400',
+    bio: 'PhD in Computer Science from MIT. Emily drives our technical excellence and innovation in AI and cloud architecture.',
+    linkedin: '#',
+    twitter: '#',
+  },
+  {
+    id: '3',
+    name: 'Marcus Johnson',
+    role: 'Head of Design',
+    image: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=400',
+    bio: 'Award-winning designer with expertise in UX research. Marcus ensures every product delivers exceptional user experiences.',
+    linkedin: '#',
+    twitter: '#',
+  },
+  {
+    id: '4',
+    name: 'Sarah Williams',
+    role: 'VP of Engineering',
+    image: 'https://images.pexels.com/photos/7749095/pexels-photo-7749095.jpeg?auto=compress&cs=tinysrgb&w=400',
+    bio: 'Engineering leader with experience at Microsoft and Amazon. Sarah scales our development practices for enterprise clients.',
+    linkedin: '#',
+    twitter: '#',
+  },
+  {
+    id: '5',
+    name: 'James Rodriguez',
+    role: 'Head of Cloud & DevOps',
+    image: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=400',
+    bio: 'AWS certified solutions architect. James leads our cloud infrastructure and DevOps practices for maximum reliability.',
+    linkedin: '#',
+    twitter: '#',
+  },
+  {
+    id: '6',
+    name: 'Lisa Park',
+    role: 'Director of AI/ML',
+    image: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=400',
+    bio: 'Former Tesla AI researcher. Lisa drives innovation in machine learning and AI-powered solutions for our clients.',
+    linkedin: '#',
+    twitter: '#',
+  },
+];
