@@ -78,9 +78,9 @@ export default function Hero() {
                 transition={{ delay: 0.2, duration: 0.7 }}
                 className="text-[2.8rem] md:text-[3.5rem] lg:text-[4rem] xl:text-[4.2rem] font-bold leading-[1.1] tracking-tight mb-6"
               >
-                <span className="text-white">Transforming Ideas into </span>
+                <span className="text-white">Transform Your Business with </span>
                 <br />
-                <span className="gradient-text">Scalable Digital Solutions</span>
+                <span className="gradient-text">Innovative Solutions</span>
               </motion.h1>
 
               {/* Sub */}
@@ -90,7 +90,7 @@ export default function Hero() {
                 transition={{ delay: 0.32, duration: 0.7 }}
                 className="text-gray-400 text-lg leading-relaxed mb-9 max-w-lg"
               >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor. Cum sociis natoque penatibus et magnis.
+                From intelligent automation to complete digital transformation - we make the complex simple and help your business thrive in the digital age.
               </motion.p>
 
               {/* CTAs */}
@@ -106,7 +106,7 @@ export default function Hero() {
                     whileTap={{ scale: 0.97 }}
                     className="flex items-center gap-2 px-7 py-3.5 bg-edroyt-green hover:bg-edroyt-green-secondary text-white font-semibold rounded-lg shadow-xl shadow-edroyt-green/25 transition-colors"
                   >
-                    Start Your Project
+                    Start Your Transformation
                     <ArrowRight size={17} />
                   </motion.button>
                 </Link>
@@ -116,7 +116,7 @@ export default function Hero() {
                     whileTap={{ scale: 0.97 }}
                     className="flex items-center gap-2 px-7 py-3.5 border border-white/15 hover:border-white/30 hover:bg-white/5 text-white font-medium rounded-lg transition-all"
                   >
-                    Explore Our Work
+                    Explore Our Services
                     <ArrowUpRight size={16} />
                   </motion.button>
                 </Link>
