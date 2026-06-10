@@ -16,7 +16,7 @@ export default function Home() {
       <ServicesPreview />
       <WhyChooseUs />
       {/* <DevelopmentProcess /> */}
-      <TechnologiesPreview />
+      {/* <TechnologiesPreview /> */}
       <FeaturedPortfolio />
       <Testimonials />
       <FinalCTA />

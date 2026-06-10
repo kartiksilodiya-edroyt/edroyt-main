@@ -2,14 +2,25 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Code2, Globe, Smartphone, Brain, Cloud, Palette } from 'lucide-react';
+import {
+  Code2,
+  Globe,
+  Smartphone,
+  Brain,
+  FileText,
+  Cloud,
+  Server,
+  Palette,
+  Rocket,
+  Wrench,
+} from 'lucide-react';
 
 const services = [
   {
     id: 'custom-software',
     title: 'Custom Software Development',
     shortDescription:
-      'End-to-end web and mobile applications. React, Next.js, Node.js, PostgreSQL, Docker — built to scale from day one.',
+      'Tailor-made software solutions designed around your business goals. From enterprise platforms to SaaS products, we build scalable systems that grow with you.',
     icon: Code2,
     num: '01',
   },
@@ -17,7 +28,7 @@ const services = [
     id: 'web-development',
     title: 'Web Development',
     shortDescription:
-      'From blazing-fast landing pages to complex data-heavy platforms. We engineer the web layer that your users will never forget.',
+      'Modern, responsive, and high-performance web applications built using React, Next.js, TypeScript, and the latest web technologies.',
     icon: Globe,
     num: '02',
   },
@@ -25,7 +36,7 @@ const services = [
     id: 'mobile-development',
     title: 'Mobile App Development',
     shortDescription:
-      'Production-grade iOS and Android apps. React Native, performance-optimized pipelines, and a UX that keeps users coming back.',
+      'Native and cross-platform mobile applications for iOS and Android with seamless user experiences and production-grade performance.',
     icon: Smartphone,
     num: '03',
   },
@@ -33,25 +44,57 @@ const services = [
     id: 'ai-automation',
     title: 'AI & Automation',
     shortDescription:
-      'ML-powered products and intelligent automation pipelines. We turn your data into decisions and your workflows into engines.',
+      'Leverage artificial intelligence, machine learning, predictive analytics, and workflow automation to improve efficiency and decision-making.',
     icon: Brain,
     num: '04',
+  },
+  {
+    id: 'document-processing',
+    title: 'Document Processing & OCR',
+    shortDescription:
+      'Automate document extraction, classification, and processing using OCR, NLP, and intelligent data capture technologies.',
+    icon: FileText,
+    num: '05',
+  },
+  {
+    id: 'cloud-transformation',
+    title: 'Cloud Transformation',
+    shortDescription:
+      'Migrate, modernize, and optimize applications across AWS, Azure, and Google Cloud while improving security, scalability, and cost efficiency.',
+    icon: Cloud,
+    num: '06',
   },
   {
     id: 'cloud-devops',
     title: 'Cloud & DevOps',
     shortDescription:
-      'AWS, GCP, Docker, Kubernetes — zero-downtime deployments with full observability, CI/CD pipelines, and infrastructure as code.',
-    icon: Cloud,
-    num: '05',
+      'CI/CD pipelines, Kubernetes, Docker, Infrastructure as Code, monitoring, and observability for reliable software delivery.',
+    icon: Server,
+    num: '07',
   },
   {
     id: 'ui-ux-design',
     title: 'UI/UX Design',
     shortDescription:
-      'User-centric design that drives conversions. From wireframes to pixel-perfect interfaces with full responsiveness and accessibility.',
+      'Human-centered digital experiences through user research, wireframing, prototyping, visual design, and usability testing.',
     icon: Palette,
-    num: '06',
+    num: '08',
+  },
+  {
+    id: 'product-consulting',
+    title: 'Product Development & Consulting',
+    shortDescription:
+      'From idea validation and product strategy to MVP development and scaling, we help businesses launch successful digital products.',
+    icon: Rocket,
+    num: '09',
+  },
+  {
+    id: 'maintenance-support',
+    title: 'Maintenance & Support',
+    shortDescription:
+      'Continuous monitoring, bug fixes, security updates, feature enhancements, and performance optimization for long-term success.',
+    icon: Wrench,
+    num: '10',
   },
 ];
 
