@@ -15,7 +15,7 @@ export default function Home() {
       <CompanyOverview />
       <ServicesPreview />
       <WhyChooseUs />
-      <DevelopmentProcess />
+      {/* <DevelopmentProcess /> */}
       <TechnologiesPreview />
       <FeaturedPortfolio />
       <Testimonials />

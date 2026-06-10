@@ -2,149 +2,215 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Code2, Globe, Smartphone, Brain, Cloud, Palette, ArrowRight } from 'lucide-react';
+import { Code2, Globe, Smartphone, Brain, Cloud, Palette } from 'lucide-react';
 
 const services = [
   {
     id: 'custom-software',
     title: 'Custom Software Development',
-    shortDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor aenean massa.',
+    shortDescription:
+      'End-to-end web and mobile applications. React, Next.js, Node.js, PostgreSQL, Docker — built to scale from day one.',
     icon: Code2,
-    accent: 'from-emerald-500/15 to-green-500/10',
-    border: 'hover:border-emerald-500/30',
+    num: '01',
   },
   {
     id: 'web-development',
     title: 'Web Development',
-    shortDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor aenean massa.',
+    shortDescription:
+      'From blazing-fast landing pages to complex data-heavy platforms. We engineer the web layer that your users will never forget.',
     icon: Globe,
-    accent: 'from-sky-500/15 to-blue-500/10',
-    border: 'hover:border-sky-500/30',
+    num: '02',
   },
   {
     id: 'mobile-development',
     title: 'Mobile App Development',
-    shortDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor aenean massa.',
+    shortDescription:
+      'Production-grade iOS and Android apps. React Native, performance-optimized pipelines, and a UX that keeps users coming back.',
     icon: Smartphone,
-    accent: 'from-violet-500/15 to-purple-500/10',
-    border: 'hover:border-violet-500/30',
+    num: '03',
   },
   {
     id: 'ai-automation',
     title: 'AI & Automation',
-    shortDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor aenean massa.',
+    shortDescription:
+      'ML-powered products and intelligent automation pipelines. We turn your data into decisions and your workflows into engines.',
     icon: Brain,
-    accent: 'from-rose-500/15 to-red-500/10',
-    border: 'hover:border-rose-500/30',
+    num: '04',
   },
   {
     id: 'cloud-devops',
     title: 'Cloud & DevOps',
-    shortDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor aenean massa.',
+    shortDescription:
+      'AWS, GCP, Docker, Kubernetes — zero-downtime deployments with full observability, CI/CD pipelines, and infrastructure as code.',
     icon: Cloud,
-    accent: 'from-orange-500/15 to-amber-500/10',
-    border: 'hover:border-orange-500/30',
+    num: '05',
   },
   {
     id: 'ui-ux-design',
     title: 'UI/UX Design',
-    shortDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor aenean massa.',
+    shortDescription:
+      'User-centric design that drives conversions. From wireframes to pixel-perfect interfaces with full responsiveness and accessibility.',
     icon: Palette,
-    accent: 'from-pink-500/15 to-fuchsia-500/10',
-    border: 'hover:border-pink-500/30',
+    num: '06',
   },
 ];
 
 export default function ServicesPreview() {
   return (
-    <section className="section-padding bg-edroyt-dark relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-edroyt-green/4 rounded-full blur-3xl" />
+    <section className="relative bg-[#08090d] overflow-hidden py-24 md:py-32">
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
-        {/* Header */}
+      {/* Background texture */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full opacity-[0.03] blur-[140px]"
+          style={{ background: '#22c578' }} />
+        {/* Horizontal rule crossing the section */}
+        <div className="absolute left-0 right-0 h-px top-[42%]"
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(34,197,120,0.12) 20%, rgba(34,197,120,0.12) 80%, transparent)' }} />
+      </div>
+
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
+
+        {/* ── Header ── */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14"
+          transition={{ duration: 0.55 }}
+          className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 md:mb-20"
         >
           <div>
-            <span className="inline-block text-edroyt-green text-xs font-bold tracking-widest uppercase mb-4">
-              Our Services
-            </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
-              Lorem Ipsum Dolor<br className="hidden md:block" /> Sit Amet
+            <div className="flex items-center gap-3 mb-5">
+              <span className="w-4 h-4 rounded-sm flex-shrink-0" style={{ background: '#22c578' }} aria-hidden />
+              <span className="text-[#22c578] text-[11px] font-bold tracking-[0.22em] uppercase">
+                Our Services
+              </span>
+            </div>
+            <h2
+              className="text-4xl md:text-5xl lg:text-[3.5rem] font-black text-white leading-[1.04] tracking-tight"
+              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            >
+              Not just a dev agency.
+              <br />
+              <span style={{
+                background: 'linear-gradient(135deg,#22c578,#7fffc4)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}>
+                Your tech partner.
+              </span>
             </h2>
           </div>
-          <p className="text-gray-400 max-w-sm">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cum sociis natoque penatibus.
-          </p>
+
+          <div className="flex flex-col gap-5 md:items-end">
+            <p className="text-[#8a9bb0] text-sm leading-relaxed max-w-[280px] md:text-right">
+              Engineers, architects, problem-solvers. Our mission: make your
+              infrastructure bulletproof and your product unstoppable.
+            </p>
+            <Link href="/services">
+              <motion.span
+                whileHover={{ x: 4 }}
+                className="inline-flex items-center gap-2 text-[#22c578] text-sm font-semibold cursor-pointer"
+              >
+                View all services
+                <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </motion.span>
+            </Link>
+          </div>
         </motion.div>
 
-        {/* Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/* ── Service list — editorial row layout ── */}
+        <div className="flex flex-col divide-y divide-white/[0.06]">
           {services.map((service, index) => (
             <motion.div
               key={service.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.08 }}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.45, delay: index * 0.07 }}
             >
               <Link href={`/services#${service.id}`}>
-                <motion.div
-                  whileHover={{ y: -6 }}
-                  transition={{ duration: 0.2 }}
-                  className={`group h-full glass rounded-2xl p-6 border border-white/5 ${service.border} transition-all duration-300 cursor-pointer overflow-hidden relative`}
-                >
-                  {/* Hover gradient fill */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${service.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                <div className="group flex items-center gap-6 py-6 md:py-7 cursor-pointer">
 
-                  <div className="relative z-10">
-                    {/* Number + icon */}
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="w-11 h-11 rounded-xl bg-edroyt-green/15 group-hover:bg-edroyt-green/25 flex items-center justify-center transition-colors">
-                        <service.icon className="w-5 h-5 text-edroyt-green-accent" />
-                      </div>
-                      <span className="text-2xl font-bold text-white/10 group-hover:text-white/20 transition-colors font-mono">
-                        0{index + 1}
-                      </span>
-                    </div>
+                  {/* Index */}
+                  <span
+                    className="text-[11px] font-black tracking-[0.15em] tabular-nums flex-shrink-0 w-8 transition-colors duration-200"
+                    style={{ color: '#4a5568', fontFamily: 'monospace' }}
+                  >
+                    {service.num}
+                  </span>
 
-                    <h3 className="text-lg font-semibold text-white mb-3 group-hover:text-edroyt-green-accent transition-colors leading-snug">
-                      {service.title}
-                    </h3>
-                    <p className="text-gray-500 text-sm leading-relaxed mb-5">
-                      {service.shortDescription}
-                    </p>
-
-                    <div className="flex items-center text-edroyt-green text-sm font-medium gap-1.5 group-hover:gap-2.5 transition-all">
-                      Learn more
-                      <ArrowRight size={15} />
-                    </div>
+                  {/* Icon box */}
+                  <div
+                    className="w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                    style={{
+                      background: 'rgba(34,197,120,0.08)',
+                      border: '1px solid rgba(34,197,120,0.12)',
+                    }}
+                  >
+                    <service.icon
+                      size={16}
+                      style={{ color: '#22c578' }}
+                      className="transition-colors duration-200"
+                    />
                   </div>
-                </motion.div>
+
+                  {/* Title */}
+                  <h3
+                    className="flex-1 text-base md:text-lg font-bold text-[#8a9bb0] group-hover:text-white transition-colors duration-200 leading-snug"
+                    style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                  >
+                    {service.title}
+                  </h3>
+
+                  {/* Description — visible on md+ */}
+                  <p className="hidden lg:block flex-1 text-[#4a5568] text-sm leading-relaxed group-hover:text-[#8a9bb0] transition-colors duration-300 max-w-sm">
+                    {service.shortDescription}
+                  </p>
+
+                  {/* Arrow */}
+                  <div
+                    className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0"
+                    style={{ border: '1px solid rgba(34,197,120,0.4)' }}
+                  >
+                    <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="#22c578" strokeWidth={2.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M7 7h10v10" />
+                    </svg>
+                  </div>
+                </div>
               </Link>
             </motion.div>
           ))}
         </div>
 
+        {/* ── Bottom CTA ── */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.4 }}
-          className="text-center mt-12"
+          transition={{ delay: 0.5 }}
+          className="mt-14 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
         >
-          <Link href="/services">
+          <p className="text-[#4a5568] text-sm">
+            Not sure what you need?{' '}
+            <span className="text-[#8a9bb0]">We'll figure it out together.</span>
+          </p>
+          <Link href="/contact">
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/15 text-gray-300 hover:text-white hover:border-white/30 hover:bg-white/5 transition-all text-sm font-medium"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-white transition-all"
+              style={{
+                background: 'linear-gradient(135deg,#0d7040,#22c578)',
+                boxShadow: '0 0 28px rgba(34,197,120,0.18)',
+              }}
             >
-              View All Services
-              <ArrowRight size={16} />
+              Start a project
+              <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
             </motion.button>
           </Link>
         </motion.div>

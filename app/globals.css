@@ -150,3 +150,10 @@
   background: rgba(22, 163, 74, 0.3);
   color: #FFFFFF;
 }
+
+.gradient-text {
+  background: linear-gradient(120deg, #22C578, #6EFFBE);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
