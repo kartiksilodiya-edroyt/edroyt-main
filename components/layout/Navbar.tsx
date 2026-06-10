@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
+import Image from "next/image";
 
 const servicesMegaMenu = [
   {
@@ -114,25 +115,29 @@ export default function Navbar() {
         style={{ zIndex: 9999, position: 'fixed', top: 0, left: 0, right: 0 }}
         className={`transition-all duration-300 ${
           isScrolled || isMegaOpen
-            ? 'bg-[#0B0F14] border-b border-white/8 shadow-2xl shadow-black/50'
+            ? 'bg-[#070B11]/95 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_40px_rgba(0,0,0,0.5)]'
             : 'bg-transparent'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex items-center justify-between h-[68px]">
+        <div className="max-w-7xl mx-auto px-8 lg:px-10">
+          <div className="flex items-center justify-between h-[80px]">
 
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 group flex-shrink-0">
-              <div className="w-9 h-9 rounded-lg bg-edroyt-green flex items-center justify-center shadow-lg shadow-edroyt-green/30 group-hover:bg-edroyt-green-secondary transition-colors">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                  <path d="M8 9L4 12L8 15" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M16 9L20 12L16 15" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M13 6L11 18" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
-                </svg>
-              </div>
-              <span className="text-[1.2rem] font-bold text-white tracking-tight">Edroyt</span>
-            </Link>
-
+           {/* Logo */}
+<Link
+  href="/"
+  className="flex items-center justify-center flex-shrink-0"
+>
+  <div className="relative w-[220px] h-[60px] transition-transform duration-300 hover:scale-105">
+    <Image
+      src="/logo/edroyt-logo-removebg-preview.png"
+      alt="Edroyt"
+      fill
+      priority
+      sizes="220px"
+      className="object-contain object-left"
+    />
+  </div>
+</Link>
             {/* Desktop nav links */}
             <div className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) =>
@@ -174,7 +179,7 @@ export default function Navbar() {
                 <motion.button
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-edroyt-green hover:bg-edroyt-green-secondary text-white text-sm font-semibold rounded-lg shadow-lg shadow-edroyt-green/20 transition-colors"
+                  className="flex items-center gap-2 px-6 py-3 bg-edroyt-green hover:bg-edroyt-green-secondary text-white text-sm font-semibold rounded-xl shadow-[0_8px_30px_rgba(34,197,94,0.35)] transition-all duration-300"
                 >
                   Get Started
                   <ArrowRight size={15} />
@@ -204,7 +209,7 @@ export default function Navbar() {
             transition={{ duration: 0.16, ease: 'easeOut' }}
             onMouseEnter={openMega}
             onMouseLeave={closeMega}
-            style={{ zIndex: 9998, position: 'fixed', top: '68px', left: 0, right: 0 }}
+           style={{ zIndex: 9998, position: 'fixed', top: '80px', left: 0, right: 0 }} 
             className="bg-[#0B0F14] border-b border-white/8 shadow-[0_20px_60px_-10px_rgba(0,0,0,0.9)]"
           >
             <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10">
