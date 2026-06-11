@@ -2,43 +2,22 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, TrendingUp, ExternalLink } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
-const featuredProjects = [
-  {
-    id: 'fintech-platform',
-    title: 'Lorem Ipsum Fintech Platform',
-    client: 'Lorem Corp',
-    industry: 'Financial Services',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor. Cum sociis natoque penatibus et magnis.',
-    image: 'https://images.pexels.com/photos/8376277/pexels-photo-8376277.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-    technologies: ['React', 'Node.js', 'PostgreSQL', 'AWS', 'Kubernetes'],
-    result: 'Processing $2B+ annual transactions',
-    color: 'from-emerald-500/20',
-  },
-  {
-    id: 'healthcare-portal',
-    title: 'Lorem Ipsum Healthcare Portal',
-    client: 'MedTech Ipsum',
-    industry: 'Healthcare',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor. Cum sociis natoque penatibus et magnis.',
-    image: 'https://images.pexels.com/photos/4386466/pexels-photo-4386466.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-    technologies: ['Next.js', 'TypeScript', 'MongoDB', 'Azure', 'Docker'],
-    result: 'Serving 500+ healthcare facilities',
-    color: 'from-sky-500/20',
-  },
-  {
-    id: 'ecommerce-platform',
-    title: 'Lorem Ipsum E-commerce Platform',
-    client: 'RetailMax Ipsum',
-    industry: 'Retail',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor. Cum sociis natoque penatibus et magnis.',
-    image: 'https://images.pexels.com/photos/4386467/pexels-photo-4386467.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-    technologies: ['Next.js', 'React Native', 'Node.js', 'Redis', 'AWS'],
-    result: '300% increase in conversion rate',
-    color: 'from-violet-500/20',
-  },
+const portfolioLogos = [
+  { id: 'seize-the-ads',    name: 'Seize The Ads',    industry: 'AdTech',            emoji: '📈', accent: '#3b82f6' },
+  { id: 'my-work',          name: 'MyWork',            industry: 'Productivity',       emoji: '💼', accent: '#6366f1' },
+  { id: 'atpace',           name: 'Atpace',            industry: 'Health & Wellness',  emoji: '🚀', accent: '#8b5cf6' },
+  { id: 'sell-it',          name: 'Sell It',           industry: 'E-commerce',         emoji: '⚡', accent: '#f59e0b' },
+  { id: 'meinstein',        name: 'mEinstein',         industry: 'EdTech',             emoji: '🧠', accent: '#f97316' },
+  { id: 'kalkii-fresh',     name: 'Kalkii Fresh',      industry: 'Food & Delivery',    emoji: '🌿', accent: '#22c55e' },
+  { id: 'niramaya-health',  name: 'Niramaya Health',   industry: 'Healthcare',         emoji: '🏥', accent: '#ef4444' },
+  { id: 'crack-detection',  name: 'Crack Detection',   industry: 'Civil Engineering',  emoji: '🔍', accent: '#3b82f6' },
+  { id: 'smart-dvr',        name: 'Smart DVR',         industry: 'IoT / Security',     emoji: '📹', accent: '#10b981' },
 ];
+
+// Duplicate for seamless infinite loop
+const marqueeItems = [...portfolioLogos, ...portfolioLogos];
 
 export default function FeaturedPortfolio() {
   return (
@@ -46,6 +25,7 @@ export default function FeaturedPortfolio() {
       <div className="absolute inset-0 bg-gradient-to-b from-edroyt-dark via-edroyt-surface to-edroyt-dark" />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -55,10 +35,10 @@ export default function FeaturedPortfolio() {
         >
           <div>
             <span className="inline-block text-edroyt-green text-xs font-bold tracking-widest uppercase mb-4">
-              Case Studies
+              Our Work
             </span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
-              Lorem Ipsum<br className="hidden md:block" /> Dolor Sit
+              Trusted By<br className="hidden md:block" /> Builders
             </h2>
           </div>
           <Link href="/portfolio">
@@ -71,73 +51,115 @@ export default function FeaturedPortfolio() {
           </Link>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {featuredProjects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
+        {/* Marquee rows */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.15 }}
+          className="relative"
+        >
+          {/* Edge fade masks */}
+          <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-24 z-10"
+            style={{ background: 'linear-gradient(90deg, #0d0e14 0%, transparent 100%)' }} />
+          <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-24 z-10"
+            style={{ background: 'linear-gradient(270deg, #0d0e14 0%, transparent 100%)' }} />
+
+          {/* Row 1 — scrolls left */}
+          <div className="overflow-hidden mb-4">
+            <div
+              className="flex gap-4"
+              style={{
+                animation: 'marquee-left 32s linear infinite',
+                width: 'max-content',
+              }}
             >
-              <Link href={`/portfolio#${project.id}`}>
-                <motion.div
-                  whileHover={{ y: -8 }}
-                  transition={{ duration: 0.25 }}
-                  className="group h-full glass rounded-2xl overflow-hidden border border-white/5 hover:border-white/10 transition-all cursor-pointer"
-                >
-                  {/* Image */}
-                  <div className="relative aspect-[16/9] overflow-hidden">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                    <div className={`absolute inset-0 bg-gradient-to-t ${project.color} via-edroyt-dark/60 to-edroyt-dark/20`} />
+              {marqueeItems.map((item, i) => (
+                <LogoCard key={`r1-${i}`} item={item} />
+              ))}
+            </div>
+          </div>
 
-                    {/* Industry */}
-                    <div className="absolute top-4 left-4">
-                      <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-black/40 text-white backdrop-blur-sm border border-white/10">
-                        {project.industry}
-                      </span>
-                    </div>
+          {/* Row 2 — scrolls right (offset) */}
+          <div className="overflow-hidden">
+            <div
+              className="flex gap-4"
+              style={{
+                animation: 'marquee-right 38s linear infinite',
+                width: 'max-content',
+              }}
+            >
+              {[...marqueeItems].reverse().map((item, i) => (
+                <LogoCard key={`r2-${i}`} item={item} />
+              ))}
+            </div>
+          </div>
+        </motion.div>
 
-                    <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
-                        <ExternalLink size={14} className="text-white" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Body */}
-                  <div className="p-5">
-                    <p className="text-xs text-gray-600 mb-1">{project.client}</p>
-                    <h3 className="text-base font-bold text-white mb-2 group-hover:text-edroyt-green-accent transition-colors leading-snug">
-                      {project.title}
-                    </h3>
-                    <p className="text-gray-500 text-sm leading-relaxed mb-4 line-clamp-2">
-                      {project.description}
-                    </p>
-
-                    <div className="flex flex-wrap gap-1.5 mb-4">
-                      {project.technologies.slice(0, 3).map((t) => (
-                        <span key={t} className="px-2 py-0.5 text-[10px] font-medium rounded bg-white/5 text-gray-500">
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="flex items-center gap-1.5 text-edroyt-green-accent text-xs font-semibold">
-                      <TrendingUp size={13} />
-                      {project.result}
-                    </div>
-                  </div>
-                </motion.div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
+        {/* Keyframes injected via style tag */}
+        <style>{`
+          @keyframes marquee-left {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          @keyframes marquee-right {
+            0%   { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+          }
+        `}</style>
       </div>
     </section>
+  );
+}
+
+function LogoCard({ item }: { item: typeof portfolioLogos[number] }) {
+  return (
+    <Link href={`/portfolio#${item.id}`}>
+      <div
+        className="flex items-center gap-3 px-5 py-3.5 rounded-2xl border cursor-pointer transition-all duration-300 select-none group"
+        style={{
+          background: `${item.accent}0d`,
+          borderColor: `${item.accent}22`,
+          minWidth: '200px',
+        }}
+        onMouseEnter={(e) => {
+          const el = e.currentTarget as HTMLElement;
+          el.style.borderColor = `${item.accent}55`;
+          el.style.background = `${item.accent}1a`;
+        }}
+        onMouseLeave={(e) => {
+          const el = e.currentTarget as HTMLElement;
+          el.style.borderColor = `${item.accent}22`;
+          el.style.background = `${item.accent}0d`;
+        }}
+      >
+        {/* Emoji icon */}
+        <div
+          className="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
+          style={{ background: `${item.accent}18`, border: `1px solid ${item.accent}30` }}
+        >
+          {item.emoji}
+        </div>
+
+        {/* Text */}
+        <div>
+          <p
+            className="text-sm font-bold leading-tight transition-colors duration-200"
+            style={{ color: '#e2e8f0', fontFamily: "'Space Grotesk', sans-serif" }}
+          >
+            {item.name}
+          </p>
+          <p className="text-[10px] font-medium mt-0.5" style={{ color: '#4a5568' }}>
+            {item.industry}
+          </p>
+        </div>
+
+        {/* Accent dot */}
+        <div
+          className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0 opacity-50 group-hover:opacity-100 transition-opacity"
+          style={{ background: item.accent }}
+        />
+      </div>
+    </Link>
   );
 }
