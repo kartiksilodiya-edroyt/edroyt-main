@@ -5,27 +5,27 @@ import { motion } from 'framer-motion';
 import { Github, Linkedin, Twitter, Mail, MapPin, Phone, ArrowRight } from 'lucide-react';
 
 const quickLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'About', href: '/about' },
-  { label: 'Services', href: '/services' },
-  { label: 'Portfolio', href: '/portfolio' },
-  { label: 'Technologies', href: '/technologies' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'Home',         href: '/'            },
+  { label: 'About',        href: '/about'        },
+  { label: 'Services',     href: '/services'     },
+  { label: 'Portfolio',    href: '/portfolio'    },
+  // { label: 'Technologies', href: '/technologies' },
+  { label: 'Contact',      href: '/contact'      },
 ];
 
 const services = [
-  { label: 'Custom Software', href: '/services#custom-software' },
-  { label: 'Web Development', href: '/services#web-development' },
+  { label: 'Custom Software',    href: '/services#custom-software'    },
+  { label: 'Web Development',    href: '/services#web-development'    },
   { label: 'Mobile Development', href: '/services#mobile-development' },
-  { label: 'AI & Automation', href: '/services#ai-automation' },
-  { label: 'Cloud & DevOps', href: '/services#cloud-devops' },
-  { label: 'UI/UX Design', href: '/services#ui-ux-design' },
+  { label: 'AI & Automation',    href: '/services#ai-automation'      },
+  { label: 'Cloud & DevOps',     href: '/services#cloud-devops'       },
+  { label: 'UI/UX Design',       href: '/services#ui-ux-design'       },
 ];
 
 const socialLinks = [
-  { icon: Twitter, href: '#', label: 'Twitter' },
+  { icon: Twitter,  href: '#', label: 'Twitter'  },
   { icon: Linkedin, href: '#', label: 'LinkedIn' },
-  { icon: Github, href: '#', label: 'GitHub' },
+  { icon: Github,   href: '#', label: 'GitHub'   },
 ];
 
 export default function Footer() {
@@ -36,8 +36,8 @@ export default function Footer() {
         {/* Top CTA strip */}
         <div className="py-10 border-b border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <h3 className="text-xl font-bold text-white mb-1">Lorem ipsum dolor sit amet?</h3>
-            <p className="text-gray-500 text-sm">Consectetur adipiscing elit. Aenean commodo ligula.</p>
+            <h3 className="text-xl font-bold text-white mb-1">Ready to build something that lasts?</h3>
+            <p className="text-gray-500 text-sm">Tell us what you're solving — we'll tell you how we'd approach it.</p>
           </div>
           <Link href="/contact">
             <motion.button
@@ -66,7 +66,7 @@ export default function Footer() {
               <span className="text-xl font-bold text-white">Edroyt</span>
             </Link>
             <p className="text-gray-500 text-sm leading-relaxed">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor.
+              Production-grade software built by engineers who take ownership — from first commit to long-term uptime.
             </p>
             <div className="flex gap-2.5">
               {socialLinks.map((s) => (
@@ -119,7 +119,7 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start gap-2.5 text-gray-500 text-sm">
                 <MapPin size={15} className="mt-0.5 text-edroyt-green flex-shrink-0" />
-                <span>San Francisco, CA 94102<br />United States</span>
+                <span>Proudly Indian 🇮🇳, Working Remotely</span>
               </li>
               <li>
                 <a href="mailto:hello@edroyt.com" className="flex items-center gap-2.5 text-gray-500 hover:text-edroyt-green-accent text-sm transition-colors">
@@ -140,7 +140,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="py-5 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-gray-600 text-xs">
-            {new Date().getFullYear()} Edroyt. All rights reserved.
+            © {new Date().getFullYear()} Edroyt. All rights reserved.
           </p>
           <div className="flex gap-5 text-xs">
             <Link href="#" className="text-gray-600 hover:text-gray-400 transition-colors">Privacy Policy</Link>
