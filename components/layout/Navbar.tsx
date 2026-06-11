@@ -73,7 +73,7 @@ const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
   { label: 'Services', href: '/services', hasMega: true },
-  { label: 'Technologies', href: '/technologies' },
+  // { label: 'Technologies', href: '/technologies' },
   { label: 'Portfolio', href: '/portfolio' },
   { label: 'Contact', href: '/contact' },
 ];
