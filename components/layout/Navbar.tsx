@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
+import { Menu, X, ChevronDown, ArrowRight, Sun, Moon } from 'lucide-react';
 import Image from "next/image";
+import { useTheme } from 'next-themes';
 
 const servicesMegaMenu = [
   {
@@ -73,16 +74,72 @@ const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
   { label: 'Services', href: '/services', hasMega: true },
-  // { label: 'Technologies', href: '/technologies' },
   { label: 'Portfolio', href: '/portfolio' },
   { label: 'Contact', href: '/contact' },
 ];
 
+// ── Theme Toggle Button ────────────────────────────────────────────────────
+function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Avoid hydration mismatch — render only after mount
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return <div className="w-9 h-9" />;
+
+  const isDark = theme === 'dark';
+
+  return (
+    <motion.button
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className="relative flex items-center justify-center w-9 h-9 rounded-lg border transition-all duration-300"
+      style={{
+        border: '1px solid var(--border-medium)',
+        background: 'var(--bg-card)',
+        color: 'var(--text-secondary)',
+      }}
+      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        {isDark ? (
+          <motion.span
+            key="sun"
+            initial={{ opacity: 0, rotate: -90, scale: 0.6 }}
+            animate={{ opacity: 1, rotate: 0, scale: 1 }}
+            exit={{ opacity: 0, rotate: 90, scale: 0.6 }}
+            transition={{ duration: 0.2 }}
+            className="absolute"
+          >
+            <Sun size={16} />
+          </motion.span>
+        ) : (
+          <motion.span
+            key="moon"
+            initial={{ opacity: 0, rotate: 90, scale: 0.6 }}
+            animate={{ opacity: 1, rotate: 0, scale: 1 }}
+            exit={{ opacity: 0, rotate: -90, scale: 0.6 }}
+            transition={{ duration: 0.2 }}
+            className="absolute"
+          >
+            <Moon size={16} />
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </motion.button>
+  );
+}
+
+// ── Main Navbar ────────────────────────────────────────────────────────────
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMegaOpen, setIsMegaOpen] = useState(false);
   const megaTimeout = useRef<NodeJS.Timeout | null>(null);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -104,40 +161,49 @@ export default function Navbar() {
     megaTimeout.current = setTimeout(() => setIsMegaOpen(false), 120);
   };
 
+  // Dynamic navbar bg based on theme
+  const navScrolledClass = isScrolled || isMegaOpen
+    ? isDark
+      ? 'backdrop-blur-xl border-b shadow-[0_8px_40px_rgba(0,0,0,0.5)]'
+      : 'backdrop-blur-xl border-b shadow-[0_8px_40px_rgba(0,0,0,0.08)]'
+    : '';
+
   return (
     <>
       {/* ── Navbar bar ── */}
-      {/* z-[9999] ensures it paints above Framer Motion transform stacking contexts in the hero */}
       <motion.nav
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        style={{ zIndex: 9999, position: 'fixed', top: 0, left: 0, right: 0 }}
-        className={`transition-all duration-300 ${
-          isScrolled || isMegaOpen
-            ? 'bg-[#070B11]/95 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_40px_rgba(0,0,0,0.5)]'
-            : 'bg-transparent'
-        }`}
+        style={{
+          zIndex: 9999,
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: (isScrolled || isMegaOpen) ? 'var(--bg-navbar)' : 'transparent',
+          borderColor: 'var(--border-medium)',
+          transition: 'background-color 0.3s ease, border-color 0.3s ease',
+        }}
+        className={`transition-all duration-300 ${navScrolledClass}`}
       >
         <div className="max-w-7xl mx-auto px-8 lg:px-10">
           <div className="flex items-center justify-between h-[80px]">
 
-           {/* Logo */}
-<Link
-  href="/"
-  className="flex items-center justify-center flex-shrink-0"
->
-  <div className="relative w-[220px] h-[60px] transition-transform duration-300 hover:scale-105">
-    <Image
-      src="/logo/edroyt-logo-removebg-preview.png"
-      alt="Edroyt"
-      fill
-      priority
-      sizes="220px"
-      className="object-contain object-left"
-    />
-  </div>
-</Link>
+            {/* Logo */}
+            <Link href="/" className="flex items-center justify-center flex-shrink-0">
+              <div className="relative w-[220px] h-[60px] transition-transform duration-300 hover:scale-105">
+                <Image
+                  src="/logo/edroyt-logo-removebg-preview.png"
+                  alt="Edroyt"
+                  fill
+                  priority
+                  sizes="220px"
+                  className="object-contain object-left"
+                />
+              </div>
+            </Link>
+
             {/* Desktop nav links */}
             <div className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) =>
@@ -149,14 +215,14 @@ export default function Navbar() {
                     className="relative"
                   >
                     <button
-                      className={`flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors ${
-                        isMegaOpen ? 'text-white' : 'text-gray-400 hover:text-white'
-                      }`}
+                      className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors"
+                      style={{ color: isMegaOpen ? 'var(--text-primary)' : 'var(--text-secondary)' }}
                     >
                       {link.label}
                       <ChevronDown
                         size={14}
-                        className={`transition-transform duration-200 ${isMegaOpen ? 'rotate-180 text-edroyt-green' : ''}`}
+                        className={`transition-transform duration-200 ${isMegaOpen ? 'rotate-180' : ''}`}
+                        style={{ color: isMegaOpen ? 'var(--green)' : 'inherit' }}
                       />
                     </button>
                   </div>
@@ -164,22 +230,33 @@ export default function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="relative px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors group"
+                    className="relative px-4 py-2 text-sm font-medium transition-colors group"
+                    style={{ color: 'var(--text-secondary)' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
                   >
                     {link.label}
-                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-edroyt-green/50 group-hover:w-4/5 transition-all duration-300 rounded-full" />
+                    <span
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 group-hover:w-4/5 transition-all duration-300 rounded-full"
+                      style={{ background: 'var(--green)', opacity: 0.5 }}
+                    />
                   </Link>
                 )
               )}
             </div>
 
-            {/* CTA */}
-            <div className="hidden lg:block">
+            {/* Right side: Theme Toggle + CTA */}
+            <div className="hidden lg:flex items-center gap-3">
+              <ThemeToggle />
               <Link href="/contact">
                 <motion.button
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
-                  className="flex items-center gap-2 px-6 py-3 bg-edroyt-green hover:bg-edroyt-green-secondary text-white text-sm font-semibold rounded-xl shadow-[0_8px_30px_rgba(34,197,94,0.35)] transition-all duration-300"
+                  className="flex items-center gap-2 px-6 py-3 text-white text-sm font-semibold rounded-xl transition-all duration-300"
+                  style={{
+                    background: `linear-gradient(135deg, var(--green-dim), var(--green))`,
+                    boxShadow: `0 8px 30px var(--green-glow-strong)`,
+                  }}
                 >
                   Get Started
                   <ArrowRight size={15} />
@@ -188,18 +265,21 @@ export default function Navbar() {
             </div>
 
             {/* Mobile trigger */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
-            >
-              {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
+            <div className="lg:hidden flex items-center gap-2">
+              <ThemeToggle />
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-2 rounded-lg transition-colors"
+                style={{ color: 'var(--text-primary)' }}
+              >
+                {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+              </button>
+            </div>
           </div>
         </div>
       </motion.nav>
 
-      {/* ── Mega Menu — rendered as a sibling (not child) of the nav, with explicit top position ── */}
-      {/* Keeping it outside the nav avoids overflow:hidden clipping while sharing the same z-index layer */}
+      {/* ── Mega Menu ── */}
       <AnimatePresence>
         {isMegaOpen && (
           <motion.div
@@ -209,14 +289,27 @@ export default function Navbar() {
             transition={{ duration: 0.16, ease: 'easeOut' }}
             onMouseEnter={openMega}
             onMouseLeave={closeMega}
-           style={{ zIndex: 9998, position: 'fixed', top: '80px', left: 0, right: 0 }} 
-            className="bg-[#0B0F14] border-b border-white/8 shadow-[0_20px_60px_-10px_rgba(0,0,0,0.9)]"
+            style={{
+              zIndex: 9998,
+              position: 'fixed',
+              top: '80px',
+              left: 0,
+              right: 0,
+              background: 'var(--bg-secondary)',
+              borderBottom: '1px solid var(--border-medium)',
+              boxShadow: isDark
+                ? '0 20px 60px -10px rgba(0,0,0,0.9)'
+                : '0 20px 60px -10px rgba(0,0,0,0.15)',
+            }}
           >
             <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10">
               <div className="grid grid-cols-3 gap-x-10 gap-y-8">
                 {servicesMegaMenu.map((group) => (
                   <div key={group.category}>
-                    <h3 className="text-[11px] font-bold tracking-[0.15em] text-edroyt-green mb-4 uppercase">
+                    <h3
+                      className="text-[11px] font-bold tracking-[0.15em] uppercase mb-4"
+                      style={{ color: 'var(--green)' }}
+                    >
                       {group.category}
                     </h3>
                     <ul className="space-y-2.5">
@@ -225,9 +318,15 @@ export default function Navbar() {
                           <Link
                             href="/services"
                             onClick={() => setIsMegaOpen(false)}
-                            className="flex items-center gap-2.5 text-sm text-gray-400 hover:text-white transition-colors group"
+                            className="flex items-center gap-2.5 text-sm transition-colors group"
+                            style={{ color: 'var(--text-secondary)' }}
+                            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
+                            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
                           >
-                            <span className="w-1.5 h-1.5 rounded-full bg-gray-700 group-hover:bg-edroyt-green transition-colors flex-shrink-0" />
+                            <span
+                              className="w-1.5 h-1.5 rounded-full flex-shrink-0 transition-colors"
+                              style={{ background: 'var(--text-muted)' }}
+                            />
                             {item}
                           </Link>
                         </li>
@@ -238,16 +337,22 @@ export default function Navbar() {
               </div>
 
               {/* Footer row */}
-              <div className="mt-8 pt-6 border-t border-white/8 flex items-center justify-between">
+              <div
+                className="mt-8 pt-6 flex items-center justify-between"
+                style={{ borderTop: '1px solid var(--border-subtle)' }}
+              >
                 <Link
                   href="/services"
                   onClick={() => setIsMegaOpen(false)}
-                  className="flex items-center gap-2 text-sm font-semibold text-edroyt-green hover:text-edroyt-green-accent transition-colors"
+                  className="flex items-center gap-2 text-sm font-semibold transition-colors"
+                  style={{ color: 'var(--green)' }}
                 >
                   View All Services
                   <ArrowRight size={16} />
                 </Link>
-                <span className="text-xs text-gray-700">30+ specialized service offerings</span>
+                <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                  30+ specialized service offerings
+                </span>
               </div>
             </div>
           </motion.div>
@@ -265,7 +370,8 @@ export default function Navbar() {
             className="lg:hidden"
           >
             <div
-              className="absolute inset-0 bg-edroyt-dark/80 backdrop-blur-sm"
+              className="absolute inset-0 backdrop-blur-sm"
+              style={{ background: 'rgba(0,0,0,0.5)' }}
               onClick={() => setIsMobileMenuOpen(false)}
             />
             <motion.div
@@ -273,11 +379,23 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 220 }}
-              className="absolute right-0 top-0 bottom-0 w-80 bg-edroyt-dark border-l border-white/10 flex flex-col"
+              className="absolute right-0 top-0 bottom-0 w-80 flex flex-col"
+              style={{
+                background: 'var(--bg-primary)',
+                borderLeft: '1px solid var(--border-medium)',
+              }}
             >
-              <div className="flex items-center justify-between px-6 h-[68px] border-b border-white/10">
-                <span className="text-white font-bold">Menu</span>
-                <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-gray-400 hover:text-white">
+              <div
+                className="flex items-center justify-between px-6 h-[68px]"
+                style={{ borderBottom: '1px solid var(--border-medium)' }}
+              >
+                <span className="font-bold" style={{ color: 'var(--text-primary)' }}>
+                  Menu
+                </span>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  style={{ color: 'var(--text-secondary)' }}
+                >
                   <X size={20} />
                 </button>
               </div>
@@ -293,28 +411,58 @@ export default function Navbar() {
                     <Link
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center justify-between py-3.5 px-3 text-base font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                      className="flex items-center justify-between py-3.5 px-3 text-base font-medium rounded-lg transition-all"
+                      style={{ color: 'var(--text-secondary)' }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = 'var(--text-primary)';
+                        e.currentTarget.style.background = 'var(--bg-card)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = 'var(--text-secondary)';
+                        e.currentTarget.style.background = 'transparent';
+                      }}
                     >
                       {link.label}
-                      {link.hasMega && <ChevronDown size={16} className="text-gray-500" />}
+                      {link.hasMega && (
+                        <ChevronDown size={16} style={{ color: 'var(--text-muted)' }} />
+                      )}
                     </Link>
                   </motion.div>
                 ))}
 
                 {/* Mobile services list */}
-                <div className="mt-4 pt-4 border-t border-white/10">
-                  <p className="px-3 text-[10px] font-bold text-edroyt-green uppercase tracking-[0.15em] mb-3">Services</p>
+                <div
+                  className="mt-4 pt-4"
+                  style={{ borderTop: '1px solid var(--border-subtle)' }}
+                >
+                  <p
+                    className="px-3 text-[10px] font-bold uppercase tracking-[0.15em] mb-3"
+                    style={{ color: 'var(--green)' }}
+                  >
+                    Services
+                  </p>
                   {servicesMegaMenu.map((group) => (
                     <div key={group.category} className="mb-5">
-                      <p className="px-3 text-[10px] font-bold text-gray-600 uppercase tracking-wider mb-2">{group.category}</p>
+                      <p
+                        className="px-3 text-[10px] font-bold uppercase tracking-wider mb-2"
+                        style={{ color: 'var(--text-muted)' }}
+                      >
+                        {group.category}
+                      </p>
                       {group.items.map((item) => (
                         <Link
                           key={item}
                           href="/services"
                           onClick={() => setIsMobileMenuOpen(false)}
-                          className="flex items-center gap-2 py-1.5 px-3 text-sm text-gray-400 hover:text-white transition-colors"
+                          className="flex items-center gap-2 py-1.5 px-3 text-sm transition-colors"
+                          style={{ color: 'var(--text-secondary)' }}
+                          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
+                          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
                         >
-                          <span className="w-1 h-1 rounded-full bg-gray-700" />
+                          <span
+                            className="w-1 h-1 rounded-full"
+                            style={{ background: 'var(--text-muted)' }}
+                          />
                           {item}
                         </Link>
                       ))}
@@ -323,9 +471,15 @@ export default function Navbar() {
                 </div>
               </nav>
 
-              <div className="px-6 py-4 border-t border-white/10">
+              <div
+                className="px-6 py-4"
+                style={{ borderTop: '1px solid var(--border-medium)' }}
+              >
                 <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
-                  <button className="w-full flex items-center justify-center gap-2 py-3 bg-edroyt-green hover:bg-edroyt-green-secondary text-white font-semibold rounded-lg transition-colors">
+                  <button
+                    className="w-full flex items-center justify-center gap-2 py-3 text-white font-semibold rounded-lg transition-colors"
+                    style={{ background: `linear-gradient(135deg, var(--green-dim), var(--green))` }}
+                  >
                     Get Started <ArrowRight size={16} />
                   </button>
                 </Link>

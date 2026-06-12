@@ -1,17 +1,18 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Twitter, Mail, MapPin, Phone, ArrowRight } from 'lucide-react';
-import Image from 'next/image'; 
+import Image from 'next/image';
+import { useTheme } from 'next-themes';
 
 const quickLinks = [
-  { label: 'Home',         href: '/'            },
-  { label: 'About',        href: '/about'        },
-  { label: 'Services',     href: '/services'     },
-  { label: 'Portfolio',    href: '/portfolio'    },
-  // { label: 'Technologies', href: '/technologies' },
-  { label: 'Contact',      href: '/contact'      },
+  { label: 'Home',      href: '/'          },
+  { label: 'About',     href: '/about'     },
+  { label: 'Services',  href: '/services'  },
+  { label: 'Portfolio', href: '/portfolio' },
+  { label: 'Contact',   href: '/contact'   },
 ];
 
 const services = [
@@ -29,73 +30,136 @@ const socialLinks = [
   { icon: Github,   href: '#', label: 'GitHub'   },
 ];
 
-export default function Footer() {
+// Reusable nav link — hover handled on the <a> anchor Next.js renders
+function NavLink({
+  href,
+  label,
+  mutedTextColor,
+}: {
+  href: string;
+  label: string;
+  mutedTextColor: string;
+}) {
+  const [hovered, setHovered] = useState(false);
+
   return (
-    <footer className="bg-[#080C10] border-t border-white/5">
+    <Link
+      href={href}
+      className="text-sm inline-flex items-center gap-1.5 transition-colors"
+      style={{ color: hovered ? 'var(--text-primary)' : mutedTextColor }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <ArrowRight
+        size={11}
+        style={{
+          color: 'var(--green)',
+          opacity: hovered ? 1 : 0,
+          transition: 'opacity 0.15s',
+        }}
+      />
+      {label}
+    </Link>
+  );
+}
+
+export default function Footer() {
+  const { theme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const currentTheme   = mounted ? (resolvedTheme ?? theme ?? 'dark') : 'dark';
+  const isDark         = currentTheme !== 'light';
+  const borderColor    = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.07)';
+  const mutedTextColor = isDark ? 'rgb(107,114,128)'       : 'rgb(100,116,139)';
+  const dimTextColor   = isDark ? 'rgb(75,85,99)'          : 'rgb(148,163,184)';
+
+  return (
+    <footer
+      style={{
+        background: isDark ? '#080C10' : 'var(--bg-secondary)',
+        borderTop: `1px solid ${borderColor}`,
+      }}
+    >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
 
-        {/* Top CTA strip */}
-        <div className="py-10 border-b border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
+        {/* ── Top CTA strip ─────────────────────────────── */}
+        <div
+          className="py-10 flex flex-col md:flex-row items-center justify-between gap-6"
+          style={{ borderBottom: `1px solid ${borderColor}` }}
+        >
           <div>
-            <h3 className="text-xl font-bold text-white mb-1">Ready to build something that lasts?</h3>
-            <p className="text-gray-500 text-sm">Tell us what you're solving — we'll tell you how we'd approach it.</p>
+            <h3 className="text-xl font-bold mb-1" style={{ color: 'var(--text-primary)' }}>
+              Ready to build something that lasts?
+            </h3>
+            <p className="text-sm" style={{ color: mutedTextColor }}>
+              Tell us what you're solving — we'll tell you how we'd approach it.
+            </p>
           </div>
+
           <Link href="/contact">
             <motion.button
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className="flex items-center gap-2 px-6 py-3 bg-edroyt-green hover:bg-edroyt-green-secondary text-white font-semibold rounded-lg text-sm shadow-lg shadow-edroyt-green/20 transition-colors flex-shrink-0"
+              className="flex items-center gap-2 px-6 py-3 text-white font-semibold rounded-lg text-sm flex-shrink-0 transition-all"
+              style={{
+                background: 'linear-gradient(135deg, var(--green-dim), var(--green))',
+                boxShadow: isDark
+                  ? '0 4px 24px rgba(34,197,120,0.20)'
+                  : '0 4px 24px rgba(22,163,74,0.18), 0 2px 8px rgba(0,0,0,0.08)',
+              }}
             >
               Start a Project <ArrowRight size={15} />
             </motion.button>
           </Link>
         </div>
 
-        {/* Main grid */}
+        {/* ── Main grid ─────────────────────────────────── */}
         <div className="py-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
 
           {/* Brand */}
           <div className="space-y-5">
-            <Link href="/" className="flex items-center justify-center flex-shrink-0">
-  <div className="relative w-[180px] h-[50px] transition-transform duration-300 hover:scale-105">
-    <Image
-      src="/logo/edroyt-logo-removebg-preview.png"
-      alt="Edroyt"
-      fill
-      priority
-      sizes="180px"
-      className="object-contain object-left"
-    />
-  </div>
-</Link>
-            <p className="text-gray-500 text-sm leading-relaxed">
+            <Link href="/" className="flex items-center flex-shrink-0">
+              <div className="relative w-[180px] h-[50px] transition-transform duration-300 hover:scale-105">
+                <Image
+                  src="/logo/edroyt-logo-removebg-preview.png"
+                  alt="Edroyt"
+                  fill
+                  priority
+                  sizes="180px"
+                  className="object-contain object-left"
+                  style={{
+                    filter: isDark
+                      ? 'none'
+                      : 'brightness(0) saturate(100%) invert(35%) sepia(60%) saturate(500%) hue-rotate(100deg)',
+                  }}
+                />
+              </div>
+            </Link>
+
+            <p className="text-sm leading-relaxed" style={{ color: mutedTextColor }}>
               Production-grade software built by engineers who take ownership — from first commit to long-term uptime.
             </p>
+
             <div className="flex gap-2.5">
               {socialLinks.map((s) => (
-                <motion.a
-                  key={s.label}
-                  href={s.href}
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  className="w-8 h-8 flex items-center justify-center bg-white/5 hover:bg-edroyt-green/20 rounded-lg text-gray-500 hover:text-edroyt-green-accent transition-colors"
-                  aria-label={s.label}
-                >
-                  <s.icon size={15} />
-                </motion.a>
+                <SocialIcon key={s.label} {...s} isDark={isDark} mutedTextColor={mutedTextColor} />
               ))}
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-xs font-bold text-white uppercase tracking-widest mb-5">Navigation</h3>
+            <h3
+              className="text-xs font-bold uppercase tracking-widest mb-5"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              Navigation
+            </h3>
             <ul className="space-y-2.5">
               {quickLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-gray-500 hover:text-white text-sm transition-colors inline-flex items-center group gap-1.5">
-                    <ArrowRight size={11} className="opacity-0 group-hover:opacity-100 text-edroyt-green transition-opacity" />
-                    {link.label}
-                  </Link>
+                  <NavLink href={link.href} label={link.label} mutedTextColor={mutedTextColor} />
                 </li>
               ))}
             </ul>
@@ -103,14 +167,16 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <h3 className="text-xs font-bold text-white uppercase tracking-widest mb-5">Services</h3>
+            <h3
+              className="text-xs font-bold uppercase tracking-widest mb-5"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              Services
+            </h3>
             <ul className="space-y-2.5">
               {services.map((service) => (
                 <li key={service.href}>
-                  <Link href={service.href} className="text-gray-500 hover:text-white text-sm transition-colors inline-flex items-center group gap-1.5">
-                    <ArrowRight size={11} className="opacity-0 group-hover:opacity-100 text-edroyt-green transition-opacity" />
-                    {service.label}
-                  </Link>
+                  <NavLink href={service.href} label={service.label} mutedTextColor={mutedTextColor} />
                 </li>
               ))}
             </ul>
@@ -118,40 +184,131 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-xs font-bold text-white uppercase tracking-widest mb-5">Contact</h3>
+            <h3
+              className="text-xs font-bold uppercase tracking-widest mb-5"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              Contact
+            </h3>
             <ul className="space-y-4">
-              <li className="flex items-start gap-2.5 text-gray-500 text-sm">
-                <MapPin size={15} className="mt-0.5 text-edroyt-green flex-shrink-0" />
+              <li className="flex items-start gap-2.5 text-sm" style={{ color: mutedTextColor }}>
+                <MapPin size={15} className="mt-0.5 flex-shrink-0" style={{ color: 'var(--green)' }} />
                 <span>Indore, Madhya Pradesh</span>
               </li>
               <li>
-                <a href="mailto:hello@edroyt.com" className="flex items-center gap-2.5 text-gray-500 hover:text-edroyt-green-accent text-sm transition-colors">
-                  <Mail size={15} className="text-edroyt-green flex-shrink-0" />
+                <ContactLink href="mailto:hello@edroyt.com" mutedTextColor={mutedTextColor}>
+                  <Mail size={15} className="flex-shrink-0" style={{ color: 'var(--green)' }} />
                   hello@edroyt.com
-                </a>
+                </ContactLink>
               </li>
               <li>
-                <a href="tel:+14155551234" className="flex items-center gap-2.5 text-gray-500 hover:text-edroyt-green-accent text-sm transition-colors">
-                  <Phone size={15} className="text-edroyt-green flex-shrink-0" />
+                <ContactLink href="tel:+14155551234" mutedTextColor={mutedTextColor}>
+                  <Phone size={15} className="flex-shrink-0" style={{ color: 'var(--green)' }} />
                   +1 (415) 555-1234
-                </a>
+                </ContactLink>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom bar */}
-        <div className="py-5 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-gray-600 text-xs">
+        {/* ── Bottom bar ────────────────────────────────── */}
+        <div
+          className="py-5 flex flex-col sm:flex-row items-center justify-between gap-3"
+          style={{ borderTop: `1px solid ${borderColor}` }}
+        >
+          <p className="text-xs" style={{ color: dimTextColor }}>
             © {new Date().getFullYear()} Edroyt. All rights reserved.
           </p>
           <div className="flex gap-5 text-xs">
-            <Link href="#" className="text-gray-600 hover:text-gray-400 transition-colors">Privacy Policy</Link>
-            <Link href="#" className="text-gray-600 hover:text-gray-400 transition-colors">Terms of Service</Link>
-            <Link href="#" className="text-gray-600 hover:text-gray-400 transition-colors">Cookies</Link>
+            {['Privacy Policy', 'Terms of Service', 'Cookies'].map((item) => (
+              <BottomLink key={item} label={item} dimTextColor={dimTextColor} mutedTextColor={mutedTextColor} />
+            ))}
           </div>
         </div>
+
       </div>
     </footer>
+  );
+}
+
+// ── Small sub-components to keep hover state local ────────────────────────
+
+function SocialIcon({
+  icon: Icon,
+  href,
+  label,
+  isDark,
+  mutedTextColor,
+}: {
+  icon: React.ElementType;
+  href: string;
+  label: string;
+  isDark: boolean;
+  mutedTextColor: string;
+}) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <motion.a
+      href={href}
+      whileHover={{ scale: 1.1, y: -2 }}
+      className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors"
+      style={{
+        background: hovered
+          ? isDark ? 'rgba(34,197,120,0.20)' : 'rgba(22,163,74,0.12)'
+          : isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
+        color: hovered ? 'var(--green-light)' : mutedTextColor,
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      aria-label={label}
+    >
+      <Icon size={15} />
+    </motion.a>
+  );
+}
+
+function ContactLink({
+  href,
+  mutedTextColor,
+  children,
+}: {
+  href: string;
+  mutedTextColor: string;
+  children: React.ReactNode;
+}) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <a
+      href={href}
+      className="flex items-center gap-2.5 text-sm transition-colors"
+      style={{ color: hovered ? 'var(--green-light)' : mutedTextColor }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {children}
+    </a>
+  );
+}
+
+function BottomLink({
+  label,
+  dimTextColor,
+  mutedTextColor,
+}: {
+  label: string;
+  dimTextColor: string;
+  mutedTextColor: string;
+}) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <Link
+      href="#"
+      className="transition-colors"
+      style={{ color: hovered ? mutedTextColor : dimTextColor }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {label}
+    </Link>
   );
 }

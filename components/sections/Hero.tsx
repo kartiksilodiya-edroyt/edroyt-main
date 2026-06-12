@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type * as THREE from "three";
+import { useTheme } from "next-themes";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 interface TerminalLine {
@@ -18,7 +18,7 @@ const HERO_PILLS = [
   {
     label: "AI Automation",
     icon: (
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="w-[11px] h-[11px] text-[#22c578]">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="w-[11px] h-[11px]" style={{ color: "var(--green)" }}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
       </svg>
     ),
@@ -26,7 +26,7 @@ const HERO_PILLS = [
   {
     label: "Cloud Infrastructure",
     icon: (
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="w-[11px] h-[11px] text-[#22c578]">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="w-[11px] h-[11px]" style={{ color: "var(--green)" }}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
       </svg>
     ),
@@ -34,7 +34,7 @@ const HERO_PILLS = [
   {
     label: "Cyber Security",
     icon: (
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="w-[11px] h-[11px] text-[#22c578]">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="w-[11px] h-[11px]" style={{ color: "var(--green)" }}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
       </svg>
     ),
@@ -42,7 +42,7 @@ const HERO_PILLS = [
   {
     label: "Custom Software",
     icon: (
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="w-[11px] h-[11px] text-[#22c578]">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="w-[11px] h-[11px]" style={{ color: "var(--green)" }}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
       </svg>
     ),
@@ -50,7 +50,7 @@ const HERO_PILLS = [
   {
     label: "System Integration",
     icon: (
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="w-[11px] h-[11px] text-[#22c578]">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="w-[11px] h-[11px]" style={{ color: "var(--green)" }}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
       </svg>
     ),
@@ -66,28 +66,53 @@ const HERO_STATS = [
 
 const TERMINAL_LINES: TerminalLine[] = [
   { delay: 300, type: "cmd", prompt: "$", text: "edroyt status --all" },
-  { delay: 800, type: "out", text: "● System: <span style='color:#22c578'>OPERATIONAL</span>" },
-  { delay: 1100, type: "out", text: "● Uptime: <span style='color:#22c578'>99.98%</span> (last 90 days)" },
+  { delay: 800, type: "out", text: "● System: <span style='color:var(--green)'>OPERATIONAL</span>" },
+  { delay: 1100, type: "out", text: "● Uptime: <span style='color:var(--green)'>99.98%</span> (last 90 days)" },
   { delay: 1500, type: "cmd", prompt: "$", text: "deploy --project fincore-v3" },
-  { delay: 2000, type: "out", text: "↳ Building image... <span style='color:#22c578'>✓</span>" },
-  { delay: 2300, type: "out", text: "↳ Running tests... <span style='color:#22c578'>247/247 passed ✓</span>" },
-  { delay: 2700, type: "out", text: "↳ Deploying to prod... <span style='color:#22c578'>✓ Live in 4.2s</span>" },
+  { delay: 2000, type: "out", text: "↳ Building image... <span style='color:var(--green)'>✓</span>" },
+  { delay: 2300, type: "out", text: "↳ Running tests... <span style='color:var(--green)'>247/247 passed ✓</span>" },
+  { delay: 2700, type: "out", text: "↳ Deploying to prod... <span style='color:var(--green)'>✓ Live in 4.2s</span>" },
   { delay: 3200, type: "cmd", prompt: "$", text: "analytics --client atpace" },
-  { delay: 3700, type: "out", text: "↳ DAU: <span style='color:#22c578'>+340%</span> since launch" },
-  { delay: 4000, type: "out", text: "↳ Avg load time: <span style='color:#22c578'>68ms</span>" },
-  { delay: 4300, type: "out", text: "↳ Error rate: <span style='color:#22c578'>0.001%</span>" },
+  { delay: 3700, type: "out", text: "↳ DAU: <span style='color:var(--green)'>+340%</span> since launch" },
+  { delay: 4000, type: "out", text: "↳ Avg load time: <span style='color:var(--green)'>68ms</span>" },
+  { delay: 4300, type: "out", text: "↳ Error rate: <span style='color:var(--green)'>0.001%</span>" },
 ];
 
+// ── Three.js color palettes per theme ─────────────────────────────────────
+const THEME_COLORS = {
+  dark: {
+    bg: 0x08090d,
+    nodeBase: 0x22c578,
+    nodeMid: 0x0d7040,
+    nodeDim: 0x083d24,
+    nodeAccent: 0x6eefb4,
+    edgeColor: 0x22c578,
+    dustColor: 0x0d7040,
+    bright: 0xaaffdd,
+  },
+  light: {
+    bg: 0xf0f4f8,
+    nodeBase: 0x16a34a,
+    nodeMid: 0x15803d,
+    nodeDim: 0xbbf7d0,
+    nodeAccent: 0x4ade80,
+    edgeColor: 0x16a34a,
+    dustColor: 0x86efac,
+    bright: 0x166534,
+  },
+};
+
 // ── Neural Network Canvas ──────────────────────────────────────────────────
-function NeuralCanvas() {
+function NeuralCanvas({ theme }: { theme: string }) {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!mountRef.current || typeof window === "undefined") return;
 
-    // Dynamically import Three.js
     let animFrameId: number;
     let intervalIds: ReturnType<typeof setInterval>[] = [];
+
+    const colors = theme === "light" ? THEME_COLORS.light : THEME_COLORS.dark;
 
     const loadThree = async () => {
       const THREE = await import("three");
@@ -96,7 +121,7 @@ function NeuralCanvas() {
 
       const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.setClearColor(0x08090d, 1);
+      renderer.setClearColor(colors.bg, 1);
       renderer.setSize(mount.clientWidth, mount.clientHeight);
       mount.appendChild(renderer.domElement);
 
@@ -105,11 +130,10 @@ function NeuralCanvas() {
       camera.position.set(0, 0, 22);
 
       const NODE_COUNT = 85, SX = 18, SY = 10, SZ = 6, CDIST = 5.5;
-      const C_B = 0x22c578, C_M = 0x0d7040, C_D = 0x083d24, C_P = 0x6eefb4;
 
       const nodes: {
-        mesh: THREE.Mesh;
-        vel: THREE.Vector3;
+        mesh: any;
+        vel: any;
         baseHex: number;
         pulseT: number;
         isPulsing: boolean;
@@ -120,7 +144,7 @@ function NeuralCanvas() {
 
       for (let i = 0; i < NODE_COUNT; i++) {
         const isHub = i < 10;
-        const hex = isHub ? C_B : i % 3 === 0 ? C_M : C_D;
+        const hex = isHub ? colors.nodeBase : i % 3 === 0 ? colors.nodeMid : colors.nodeDim;
         const m = new THREE.MeshBasicMaterial({ color: hex });
         const mesh = new THREE.Mesh(isHub ? gL : gS, m);
         const p = new THREE.Vector3(
@@ -149,7 +173,7 @@ function NeuralCanvas() {
       eGeo.setAttribute("position", new THREE.BufferAttribute(eArr, 3));
       const eLines = new THREE.LineSegments(
         eGeo,
-        new THREE.LineBasicMaterial({ color: C_B, transparent: true, opacity: 0.1 })
+        new THREE.LineBasicMaterial({ color: colors.edgeColor, transparent: true, opacity: theme === "light" ? 0.15 : 0.1 })
       );
       scene.add(eLines);
 
@@ -178,19 +202,13 @@ function NeuralCanvas() {
       }
 
       const pGeo = new THREE.SphereGeometry(0.065, 6, 6);
-      const packets: {
-        t: number;
-        speed: number;
-        fi: number;
-        ti: number;
-        mesh: THREE.Mesh;
-      }[] = [];
+      const packets: { t: number; speed: number; fi: number; ti: number; mesh: any }[] = [];
       const MAX_P = 15;
 
       function spawnPacket() {
         if (packets.length >= MAX_P || adj.length === 0) return;
         const [fi, ti] = adj[Math.floor(Math.random() * adj.length)];
-        const dot = new THREE.Mesh(pGeo, new THREE.MeshBasicMaterial({ color: C_P }));
+        const dot = new THREE.Mesh(pGeo, new THREE.MeshBasicMaterial({ color: colors.nodeAccent }));
         dot.position.copy(nodes[fi].mesh.position);
         scene.add(dot);
         packets.push({ t: 0, speed: 0.008 + Math.random() * 0.012, fi, ti, mesh: dot });
@@ -199,12 +217,12 @@ function NeuralCanvas() {
       const spawnId = setInterval(spawnPacket, 200);
       intervalIds.push(spawnId);
 
-      const halos: { mesh: THREE.Mesh; ni: number }[] = [];
+      const halos: { mesh: any; ni: number }[] = [];
       const hGeo = new THREE.RingGeometry(0.22, 0.30, 32);
       for (let i = 0; i < 6; i++) {
         const h = new THREE.Mesh(
           hGeo,
-          new THREE.MeshBasicMaterial({ color: C_B, transparent: true, opacity: 0.1, side: THREE.DoubleSide })
+          new THREE.MeshBasicMaterial({ color: colors.nodeBase, transparent: true, opacity: 0.1, side: THREE.DoubleSide })
         );
         h.position.copy(nodes[i].mesh.position);
         scene.add(h);
@@ -222,7 +240,12 @@ function NeuralCanvas() {
       }
       const dGeo = new THREE.BufferGeometry();
       dGeo.setAttribute("position", new THREE.BufferAttribute(dPos, 3));
-      scene.add(new THREE.Points(dGeo, new THREE.PointsMaterial({ color: C_M, size: 0.06, transparent: true, opacity: 0.2 })));
+      scene.add(new THREE.Points(dGeo, new THREE.PointsMaterial({
+        color: colors.dustColor,
+        size: 0.06,
+        transparent: true,
+        opacity: theme === "light" ? 0.35 : 0.2
+      })));
 
       const pulseId = setInterval(() => {
         const n = nodes[Math.floor(Math.random() * NODE_COUNT)];
@@ -231,7 +254,7 @@ function NeuralCanvas() {
       }, 280);
       intervalIds.push(pulseId);
 
-      const bright = new THREE.Color(0xaaffdd);
+      const bright = new THREE.Color(colors.bright);
       const clock = new THREE.Clock();
       let fc = 0;
 
@@ -259,13 +282,13 @@ function NeuralCanvas() {
           n.pulseT += 0.045;
           const g = Math.sin(n.pulseT * Math.PI);
           if (n.mesh.material) {
-            (n.mesh.material as THREE.MeshBasicMaterial).color.setHex(C_B);
-            (n.mesh.material as THREE.MeshBasicMaterial).color.lerp(bright, g * 0.9);
+            (n.mesh.material as any).color.setHex(colors.nodeBase);
+            (n.mesh.material as any).color.lerp(bright, g * 0.9);
             n.mesh.scale.setScalar(1 + g * 2.2);
           }
           if (n.pulseT >= 1) {
             n.isPulsing = false;
-            if (n.mesh.material) (n.mesh.material as THREE.MeshBasicMaterial).color.setHex(n.baseHex);
+            if (n.mesh.material) (n.mesh.material as any).color.setHex(n.baseHex);
             n.mesh.scale.setScalar(1);
           }
         });
@@ -273,7 +296,7 @@ function NeuralCanvas() {
         halos.forEach(({ mesh: h, ni }, idx) => {
           h.position.copy(nodes[ni].mesh.position);
           h.rotation.z = e * 0.4 + idx;
-          if (h.material) (h.material as THREE.MeshBasicMaterial).opacity = 0.05 + Math.sin(e * 1.4 + idx * 1.1) * 0.05;
+          if (h.material) (h.material as any).opacity = 0.05 + Math.sin(e * 1.4 + idx * 1.1) * 0.05;
         });
 
         for (let i = packets.length - 1; i >= 0; i--) {
@@ -282,8 +305,8 @@ function NeuralCanvas() {
           pk.mesh.position.lerpVectors(nodes[pk.fi].mesh.position, nodes[pk.ti].mesh.position, pk.t);
           if (pk.mesh.material) {
             const a = pk.t > 0.75 ? 1 - (pk.t - 0.75) / 0.25 : 1;
-            (pk.mesh.material as THREE.MeshBasicMaterial).opacity = a;
-            (pk.mesh.material as THREE.MeshBasicMaterial).transparent = true;
+            (pk.mesh.material as any).opacity = a;
+            (pk.mesh.material as any).transparent = true;
           }
           if (pk.t >= 1) {
             scene.remove(pk.mesh);
@@ -304,7 +327,6 @@ function NeuralCanvas() {
         camera.updateProjectionMatrix();
         renderer.setSize(mount.clientWidth, mount.clientHeight);
       };
-
       window.addEventListener("resize", handleResize);
 
       return () => {
@@ -320,7 +342,8 @@ function NeuralCanvas() {
     return () => {
       cleanup.then((fn) => fn?.());
     };
-  }, []);
+    // Re-mount canvas when theme changes
+  }, [theme]);
 
   return <div ref={mountRef} className="absolute inset-0 z-0" />;
 }
@@ -328,6 +351,8 @@ function NeuralCanvas() {
 // ── Terminal ───────────────────────────────────────────────────────────────
 function Terminal() {
   const bodyRef = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
+  const isDark = theme !== "light";
 
   const renderLines = () => {
     const body = bodyRef.current;
@@ -341,9 +366,9 @@ function Terminal() {
         div.style.cssText =
           "display:flex;gap:10px;align-items:baseline;opacity:0;animation:fadeInLine 0.3s forwards;font-family:Courier New,monospace;font-size:0.82rem;line-height:1.8;";
         if (line.type === "cmd") {
-          div.innerHTML = `<span style="color:#22c578;flex-shrink:0">${line.prompt}</span><span style="color:#e2e8f0">${line.text}</span>`;
+          div.innerHTML = `<span style="color:var(--green);flex-shrink:0">${line.prompt}</span><span style="color:var(--text-primary)">${line.text}</span>`;
         } else {
-          div.innerHTML = `<span style="color:#8a9bb0">${line.text}</span>`;
+          div.innerHTML = `<span style="color:var(--text-secondary)">${line.text}</span>`;
         }
         bodyRef.current!.appendChild(div);
         bodyRef.current!.scrollTop = bodyRef.current!.scrollHeight;
@@ -352,44 +377,49 @@ function Terminal() {
   };
 
   useEffect(() => {
-    // Add keyframe animation
     if (!document.getElementById("terminal-keyframe")) {
       const style = document.createElement("style");
       style.id = "terminal-keyframe";
       style.textContent = `@keyframes fadeInLine { to { opacity: 1; } }`;
       document.head.appendChild(style);
     }
-
     renderLines();
     const id = setInterval(() => renderLines(), 6500);
     return () => clearInterval(id);
   }, []);
 
+  // Re-render lines on theme change so inline colors update
+  useEffect(() => {
+    renderLines();
+  }, [theme]);
+
   return (
     <div
       style={{
-        background: "#0a0c12",
-        border: "1px solid rgba(34,197,120,.2)",
+        background: "var(--bg-card)",
+        border: "1px solid var(--border-green)",
         borderRadius: 14,
         overflow: "hidden",
-        boxShadow: "0 0 60px rgba(34,197,120,.06)",
+        boxShadow: isDark
+          ? "0 0 60px rgba(34,197,120,.06)"
+          : "0 0 60px rgba(22,163,74,.08), 0 4px 24px rgba(0,0,0,0.06)",
       }}
     >
       {/* Title bar */}
       <div
         style={{
-          background: "#111420",
+          background: "var(--bg-secondary)",
           padding: "12px 16px",
           display: "flex",
           alignItems: "center",
           gap: 8,
-          borderBottom: "1px solid rgba(34,197,120,.1)",
+          borderBottom: "1px solid var(--border-subtle)",
         }}
       >
         <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#ff5f56", display: "inline-block" }} />
         <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#ffbd2e", display: "inline-block" }} />
         <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#27c93f", display: "inline-block" }} />
-        <span style={{ fontSize: "0.72rem", color: "#4a5568", marginLeft: 8, fontFamily: "monospace" }}>
+        <span style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginLeft: 8, fontFamily: "monospace" }}>
           edroyt — live-metrics.sh
         </span>
       </div>
@@ -403,14 +433,20 @@ function Terminal() {
 export default function Hero() {
   const [wordIndex, setWordIndex] = useState(0);
   const [nodeCount, setNodeCount] = useState(4829);
+  const { theme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-  // Word cycling
+  // Avoid SSR mismatch
+  useEffect(() => setMounted(true), []);
+
+  const currentTheme = mounted ? (resolvedTheme ?? theme ?? "dark") : "dark";
+  const isDark = currentTheme !== "light";
+
   useEffect(() => {
     const id = setInterval(() => setWordIndex((i) => (i + 1) % WORDS.length), 2200);
     return () => clearInterval(id);
   }, []);
 
-  // Node counter
   useEffect(() => {
     const id = setInterval(
       () => setNodeCount((n) => n + Math.floor(Math.random() * 5 - 1)),
@@ -423,17 +459,6 @@ export default function Hero() {
     <>
       {/* ── Global styles ─────────────────────────────── */}
       <style>{`
-        :root {
-          --bg: #08090d;
-          --bg2: #0d0f15;
-          --bg3: #111420;
-          --green: #22c578;
-          --green2: #6eefb4;
-          --green-dim: #0d7040;
-          --gray: #8a9bb0;
-          --gray2: #4a5568;
-          --border: rgba(255,255,255,0.07);
-        }
         @keyframes ping {
           0%,100% { opacity:1; transform:scale(1); }
           50% { opacity:.4; transform:scale(1.4); }
@@ -442,25 +467,13 @@ export default function Hero() {
           from { transform: translateX(-50%) translateY(0); }
           to { transform: translateX(-50%) translateY(6px); }
         }
-        @keyframes blink {
-          0%,100% { opacity:1; } 50% { opacity:0; }
-        }
         @keyframes ticker {
           from { transform: translateX(0); }
           to { transform: translateX(-50%); }
         }
-        @keyframes tickerReverse {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
-        }
-        .word-enter { animation: wordEnter 0.55s cubic-bezier(.22,1,.36,1) forwards; }
-        @keyframes wordEnter { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
         .ticker-inner { animation: ticker 30s linear infinite; }
         .ticker-inner:hover { animation-play-state: paused; }
         .tech-ticker-inner { animation: ticker 25s linear infinite reverse; }
-        ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--green-dim); border-radius: 2px; }
       `}</style>
 
       {/* ── Hero Section ──────────────────────────────── */}
@@ -475,20 +488,21 @@ export default function Hero() {
           justifyContent: "center",
           textAlign: "center",
           overflow: "hidden",
-          background: "#08090d",
+          background: "var(--bg-primary)",
         }}
       >
-        {/* Neural Canvas */}
-        <NeuralCanvas />
+        {/* Neural Canvas — re-mounts on theme change via key prop */}
+        <NeuralCanvas theme={currentTheme} />
 
-        {/* Overlay */}
+        {/* Overlay — lighter in light mode */}
         <div
           style={{
             position: "absolute",
             inset: 0,
             zIndex: 1,
-            background:
-              "radial-gradient(ellipse 70% 70% at 50% 50%, rgba(8,9,13,.5) 0%, rgba(8,9,13,.72) 55%, rgba(8,9,13,.96) 100%)",
+            background: isDark
+              ? "radial-gradient(ellipse 70% 70% at 50% 50%, rgba(8,9,13,.5) 0%, rgba(8,9,13,.72) 55%, rgba(8,9,13,.96) 100%)"
+              : "radial-gradient(ellipse 70% 70% at 50% 50%, rgba(240,244,248,.3) 0%, rgba(240,244,248,.65) 55%, rgba(240,244,248,.97) 100%)",
           }}
         />
 
@@ -500,8 +514,8 @@ export default function Hero() {
               display: "inline-flex",
               alignItems: "center",
               gap: 8,
-              border: "1px solid rgba(34,197,120,.25)",
-              background: "rgba(34,197,120,.06)",
+              border: "1px solid var(--border-green)",
+              background: isDark ? "rgba(34,197,120,.06)" : "rgba(22,163,74,.08)",
               padding: "7px 18px",
               borderRadius: 100,
               marginBottom: 28,
@@ -513,7 +527,7 @@ export default function Hero() {
                 width: 7,
                 height: 7,
                 borderRadius: "50%",
-                background: "#22c578",
+                background: "var(--green)",
                 animation: "ping 1.6s ease-in-out infinite",
                 flexShrink: 0,
               }}
@@ -524,7 +538,7 @@ export default function Hero() {
                 fontWeight: 600,
                 letterSpacing: "0.18em",
                 textTransform: "uppercase",
-                color: "#22c578",
+                color: "var(--green)",
               }}
             >
               {nodeCount.toLocaleString()} nodes active globally
@@ -538,7 +552,7 @@ export default function Hero() {
               fontWeight: 600,
               letterSpacing: "0.22em",
               textTransform: "uppercase",
-              color: "#4a5568",
+              color: "var(--text-muted)",
               marginBottom: 12,
             }}
           >
@@ -554,7 +568,7 @@ export default function Hero() {
               lineHeight: 1.03,
               letterSpacing: "-0.03em",
               marginBottom: 24,
-              color: "#fff",
+              color: "var(--text-primary)",
             }}
           >
             <span>We&nbsp;</span>
@@ -578,7 +592,7 @@ export default function Hero() {
                   <span
                     key={word}
                     style={{
-                      background: "linear-gradient(135deg, #22c578, #7fffc4)",
+                      background: "linear-gradient(135deg, var(--green), var(--green-light))",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
                       backgroundClip: "text",
@@ -600,7 +614,7 @@ export default function Hero() {
             style={{
               maxWidth: 480,
               margin: "0 auto 36px",
-              color: "#8a9bb0",
+              color: "var(--text-secondary)",
               fontSize: "1rem",
               lineHeight: 1.75,
             }}
@@ -610,15 +624,7 @@ export default function Hero() {
           </p>
 
           {/* Pills */}
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              gap: 8,
-              marginBottom: 40,
-            }}
-          >
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8, marginBottom: 40 }}>
             {HERO_PILLS.map((pill) => (
               <div
                 key={pill.label}
@@ -626,27 +632,27 @@ export default function Hero() {
                   display: "flex",
                   alignItems: "center",
                   gap: 6,
-                  border: "1px solid rgba(255,255,255,.08)",
-                  background: "rgba(255,255,255,.03)",
+                  border: "1px solid var(--border-subtle)",
+                  background: isDark ? "rgba(255,255,255,.03)" : "rgba(0,0,0,.03)",
                   padding: "6px 14px",
                   borderRadius: 100,
                   fontSize: "0.72rem",
                   fontWeight: 500,
-                  color: "#b0bec5",
+                  color: "var(--text-secondary)",
                   cursor: "default",
                   transition: "all .2s",
                 }}
                 onMouseEnter={(e) => {
                   const el = e.currentTarget as HTMLElement;
-                  el.style.borderColor = "rgba(34,197,120,.3)";
-                  el.style.background = "rgba(34,197,120,.06)";
-                  el.style.color = "#fff";
+                  el.style.borderColor = "var(--border-green)";
+                  el.style.background = isDark ? "rgba(34,197,120,.06)" : "rgba(22,163,74,.06)";
+                  el.style.color = "var(--text-primary)";
                 }}
                 onMouseLeave={(e) => {
                   const el = e.currentTarget as HTMLElement;
-                  el.style.borderColor = "rgba(255,255,255,.08)";
-                  el.style.background = "rgba(255,255,255,.03)";
-                  el.style.color = "#b0bec5";
+                  el.style.borderColor = "var(--border-subtle)";
+                  el.style.background = isDark ? "rgba(255,255,255,.03)" : "rgba(0,0,0,.03)";
+                  el.style.color = "var(--text-secondary)";
                 }}
               >
                 {pill.icon}
@@ -656,21 +662,13 @@ export default function Hero() {
           </div>
 
           {/* Buttons */}
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              gap: 12,
-              marginBottom: 56,
-            }}
-          >
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 12, marginBottom: 56 }}>
             <button
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
-                background: "linear-gradient(135deg, #0d7040, #22c578)",
+                background: "linear-gradient(135deg, var(--green-dim), var(--green))",
                 color: "#fff",
                 border: "none",
                 padding: "14px 28px",
@@ -679,16 +677,16 @@ export default function Hero() {
                 fontWeight: 700,
                 cursor: "pointer",
                 transition: "all .2s",
-                boxShadow: "0 0 40px rgba(34,197,120,.22), 0 2px 8px rgba(0,0,0,.4)",
+                boxShadow: `0 0 40px var(--green-glow), 0 2px 8px rgba(0,0,0,.4)`,
                 fontFamily: "inherit",
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-                (e.currentTarget as HTMLElement).style.boxShadow = "0 0 60px rgba(34,197,120,.3)";
+                (e.currentTarget as HTMLElement).style.boxShadow = `0 0 60px var(--green-glow-strong)`;
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                (e.currentTarget as HTMLElement).style.boxShadow = "0 0 40px rgba(34,197,120,.22), 0 2px 8px rgba(0,0,0,.4)";
+                (e.currentTarget as HTMLElement).style.boxShadow = `0 0 40px var(--green-glow), 0 2px 8px rgba(0,0,0,.4)`;
               }}
             >
               Start Building
@@ -702,8 +700,8 @@ export default function Hero() {
                 alignItems: "center",
                 gap: 8,
                 background: "transparent",
-                color: "#fff",
-                border: "1px solid rgba(255,255,255,.12)",
+                color: "var(--text-primary)",
+                border: "1px solid var(--border-subtle)",
                 padding: "14px 28px",
                 borderRadius: 10,
                 fontSize: "0.9rem",
@@ -714,11 +712,11 @@ export default function Hero() {
                 fontFamily: "inherit",
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(34,197,120,.3)";
-                (e.currentTarget as HTMLElement).style.background = "rgba(34,197,120,.05)";
+                (e.currentTarget as HTMLElement).style.borderColor = "var(--border-green)";
+                (e.currentTarget as HTMLElement).style.background = isDark ? "rgba(34,197,120,.05)" : "rgba(22,163,74,.05)";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,.12)";
+                (e.currentTarget as HTMLElement).style.borderColor = "var(--border-subtle)";
                 (e.currentTarget as HTMLElement).style.background = "transparent";
               }}
             >
@@ -736,7 +734,7 @@ export default function Hero() {
               flexWrap: "wrap",
               justifyContent: "center",
               gap: 36,
-              borderTop: "1px solid rgba(255,255,255,0.07)",
+              borderTop: "1px solid var(--border-subtle)",
               paddingTop: 32,
             }}
           >
@@ -749,12 +747,12 @@ export default function Hero() {
                     fontWeight: 700,
                     ...(stat.accent
                       ? {
-                          background: "linear-gradient(135deg, #22c578, #7fffc4)",
+                          background: "linear-gradient(135deg, var(--green), var(--green-light))",
                           WebkitBackgroundClip: "text",
                           WebkitTextFillColor: "transparent",
                           backgroundClip: "text",
                         }
-                      : { color: "#fff" }),
+                      : { color: "var(--text-primary)" }),
                   }}
                 >
                   {stat.value}
@@ -765,7 +763,7 @@ export default function Hero() {
                     fontWeight: 600,
                     letterSpacing: "0.12em",
                     textTransform: "uppercase",
-                    color: "#4a5568",
+                    color: "var(--text-muted)",
                     marginTop: 2,
                   }}
                 >
@@ -788,13 +786,12 @@ export default function Hero() {
           }}
         >
           <svg
-            width={18}
-            height={18}
+            width={18} height={18}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
             strokeWidth={2}
-            style={{ color: "#4a5568", opacity: 0.5 }}
+            style={{ color: "var(--text-muted)", opacity: 0.5 }}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
@@ -805,16 +802,13 @@ export default function Hero() {
       <div
         style={{
           overflow: "hidden",
-          borderTop: "1px solid rgba(255,255,255,0.07)",
-          borderBottom: "1px solid rgba(255,255,255,0.07)",
-          background: "#0d0f15",
+          borderTop: "1px solid var(--border-subtle)",
+          borderBottom: "1px solid var(--border-subtle)",
+          background: "var(--bg-secondary)",
           padding: "14px 0",
         }}
       >
-        <div
-          className="ticker-inner"
-          style={{ display: "flex", gap: 60, width: "max-content" }}
-        >
+        <div className="ticker-inner" style={{ display: "flex", gap: 60, width: "max-content" }}>
           {[...Array(2)].flatMap((_, i) =>
             [
               "AI Automation", "Cloud Native", "Full Stack Development", "DevOps & CI/CD",
@@ -831,11 +825,11 @@ export default function Hero() {
                   fontWeight: 600,
                   letterSpacing: "0.12em",
                   textTransform: "uppercase",
-                  color: "#4a5568",
+                  color: "var(--text-muted)",
                   whiteSpace: "nowrap",
                 }}
               >
-                <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#22c578", flexShrink: 0 }} />
+                <div style={{ width: 4, height: 4, borderRadius: "50%", background: "var(--green)", flexShrink: 0 }} />
                 {item}
               </div>
             ))
@@ -847,16 +841,13 @@ export default function Hero() {
       <div
         style={{
           overflow: "hidden",
-          borderTop: "1px solid rgba(255,255,255,0.07)",
-          borderBottom: "1px solid rgba(255,255,255,0.07)",
-          background: "#0d0f15",
+          borderTop: "1px solid var(--border-subtle)",
+          borderBottom: "1px solid var(--border-subtle)",
+          background: "var(--bg-secondary)",
           padding: "12px 0",
         }}
       >
-        <div
-          className="tech-ticker-inner"
-          style={{ display: "flex", gap: 48, width: "max-content" }}
-        >
+        <div className="tech-ticker-inner" style={{ display: "flex", gap: 48, width: "max-content" }}>
           {[...Array(2)].flatMap((_, i) =>
             ["React", "Next.js", "Node.js", "TypeScript", "Python", "Django", "PostgreSQL",
               "Docker", "Prisma", "Redis", "AWS", "GraphQL", "Kubernetes", "Tailwind"].map((tech) => (
@@ -867,14 +858,14 @@ export default function Hero() {
                   fontWeight: 600,
                   letterSpacing: "0.1em",
                   textTransform: "uppercase",
-                  color: "#4a5568",
+                  color: "var(--text-muted)",
                   whiteSpace: "nowrap",
                   display: "flex",
                   alignItems: "center",
                   gap: 8,
                 }}
               >
-                <span style={{ display: "inline-block", width: 20, height: 1, background: "#22c578", opacity: 0.4 }} />
+                <span style={{ display: "inline-block", width: 20, height: 1, background: "var(--green)", opacity: 0.4 }} />
                 {tech}
               </div>
             ))
@@ -885,7 +876,7 @@ export default function Hero() {
       {/* ── Terminal Section ──────────────────────────── */}
       <section
         id="terminal-section"
-        style={{ background: "#0d0f15", padding: "80px 40px" }}
+        style={{ background: "var(--bg-secondary)", padding: "80px 40px" }}
       >
         <div
           style={{
@@ -907,12 +898,12 @@ export default function Hero() {
                 fontWeight: 700,
                 lineHeight: 1.2,
                 marginBottom: 16,
-                color: "#fff",
+                color: "var(--text-primary)",
               }}
             >
               Real Results,<br />Real Time.
             </h3>
-            <p style={{ color: "#8a9bb0", fontSize: "0.9rem", lineHeight: 1.75, marginBottom: 28 }}>
+            <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem", lineHeight: 1.75, marginBottom: 28 }}>
               We don't just ship code — we track, measure, and iterate. Every project comes with live dashboards,
               automated alerts, and a team that cares about your numbers as much as you do.
             </p>
@@ -929,25 +920,25 @@ export default function Hero() {
                     display: "flex",
                     alignItems: "center",
                     gap: 6,
-                    border: "1px solid rgba(255,255,255,0.07)",
-                    background: "#111420",
+                    border: "1px solid var(--border-subtle)",
+                    background: "var(--bg-card)",
                     padding: "8px 14px",
                     borderRadius: 8,
                     fontSize: "0.78rem",
-                    color: "#8a9bb0",
+                    color: "var(--text-secondary)",
                     transition: "all .2s",
                     cursor: "default",
                   }}
                   onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(34,197,120,.3)";
-                    (e.currentTarget as HTMLElement).style.color = "#fff";
+                    (e.currentTarget as HTMLElement).style.borderColor = "var(--border-green)";
+                    (e.currentTarget as HTMLElement).style.color = "var(--text-primary)";
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.07)";
-                    (e.currentTarget as HTMLElement).style.color = "#8a9bb0";
+                    (e.currentTarget as HTMLElement).style.borderColor = "var(--border-subtle)";
+                    (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
                   }}
                 >
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c578", flexShrink: 0 }} />
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--green)", flexShrink: 0 }} />
                   {chip.label}
                 </div>
               ))}

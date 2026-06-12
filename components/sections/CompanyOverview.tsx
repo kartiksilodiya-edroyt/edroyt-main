@@ -10,7 +10,7 @@ const statistics = [
     suffix: '+',
     label: 'Years of\nExperience',
     desc: 'Deep enterprise and startup expertise',
-    size: 'large',   // dominant card
+    size: 'large',
   },
   {
     value: 500,
@@ -55,10 +55,9 @@ function AnimatedCounter({
     const steps = 50;
     const delay = 30;
     let step = 0;
-    // Ease-out: heavier at start, slows at end
     const timer = setInterval(() => {
       step++;
-      const progress = 1 - Math.pow(1 - step / steps, 3); // ease-out cubic
+      const progress = 1 - Math.pow(1 - step / steps, 3);
       const current = Math.round(progress * value);
       setCount(current);
       if (step >= steps) {
@@ -78,7 +77,7 @@ function AnimatedCounter({
           : 'text-[4.5rem] md:text-[5.5rem]'
       }`}
       style={{
-        background: 'linear-gradient(135deg, #22c578 10%, #7fffc4 90%)',
+        background: 'linear-gradient(135deg, var(--green) 10%, var(--green-light) 90%)',
         WebkitBackgroundClip: 'text',
         WebkitTextFillColor: 'transparent',
         backgroundClip: 'text',
@@ -93,42 +92,44 @@ function AnimatedCounter({
 // ── Section ───────────────────────────────────────────────────────────────
 export default function CompanyOverview() {
   return (
-    <section className="relative bg-[#08090d] overflow-hidden py-24 md:py-32">
+    <section
+      className="relative overflow-hidden py-24 md:py-32"
+      style={{ background: 'var(--bg-primary)' }}
+    >
 
-      {/* ── Diagonal slash accent ──────────────────────── */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-      >
-        {/* Big diagonal rule */}
+      {/* ── Background accents ────────────────────────── */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <div
           className="absolute"
           style={{
             width: '140%',
             height: '1px',
             background:
-              'linear-gradient(90deg, transparent 0%, rgba(34,197,120,0.18) 30%, rgba(34,197,120,0.35) 50%, rgba(34,197,120,0.18) 70%, transparent 100%)',
+              'linear-gradient(90deg, transparent 0%, var(--border-green) 30%, rgba(34,197,120,0.35) 50%, var(--border-green) 70%, transparent 100%)',
             top: '38%',
             left: '-20%',
             transform: 'rotate(-8deg)',
           }}
         />
-        {/* Faint second rule */}
         <div
           className="absolute"
           style={{
             width: '100%',
             height: '1px',
             background:
-              'linear-gradient(90deg, transparent 0%, rgba(34,197,120,0.07) 40%, rgba(34,197,120,0.07) 60%, transparent 100%)',
+              'linear-gradient(90deg, transparent 0%, var(--border-subtle) 40%, var(--border-subtle) 60%, transparent 100%)',
             top: '62%',
             transform: 'rotate(-8deg)',
           }}
         />
-        {/* Top-left glow */}
-        <div className="absolute -top-40 -left-20 w-[480px] h-[480px] rounded-full bg-[#22c578] opacity-[0.03] blur-[120px]" />
-        {/* Bottom-right glow */}
-        <div className="absolute -bottom-32 -right-16 w-[360px] h-[360px] rounded-full bg-[#22c578] opacity-[0.04] blur-[100px]" />
+        <div
+          className="absolute -top-40 -left-20 w-[480px] h-[480px] rounded-full blur-[120px]"
+          style={{ background: 'var(--green)', opacity: 0.03 }}
+        />
+        <div
+          className="absolute -bottom-32 -right-16 w-[360px] h-[360px] rounded-full blur-[100px]"
+          style={{ background: 'var(--green)', opacity: 0.04 }}
+        />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
@@ -142,26 +143,31 @@ export default function CompanyOverview() {
           className="mb-16 md:mb-20 flex flex-col md:flex-row md:items-end md:justify-between gap-6"
         >
           <div>
-            {/* Eyebrow with tick mark */}
             <div className="flex items-center gap-3 mb-4">
               <span
                 className="inline-block w-5 h-5 rounded-sm flex-shrink-0"
-                style={{ background: '#22c578' }}
+                style={{ background: 'var(--green)' }}
                 aria-hidden
               />
-              <span className="text-[#22c578] text-xs font-bold tracking-[0.22em] uppercase">
+              <span
+                className="text-xs font-bold tracking-[0.22em] uppercase"
+                style={{ color: 'var(--green)' }}
+              >
                 By the Numbers
               </span>
             </div>
             <h2
-              className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.0] tracking-tight"
-              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              className="text-4xl md:text-5xl lg:text-6xl font-black leading-[1.0] tracking-tight"
+              style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                color: 'var(--text-primary)',
+              }}
             >
               The proof is
               <br />
               <span
                 style={{
-                  background: 'linear-gradient(135deg, #22c578, #7fffc4)',
+                  background: 'linear-gradient(135deg, var(--green), var(--green-light))',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
@@ -172,22 +178,22 @@ export default function CompanyOverview() {
             </h2>
           </div>
 
-          <p className="text-[#8a9bb0] text-base leading-relaxed max-w-xs md:text-right">
+          <p
+            className="text-base leading-relaxed max-w-xs md:text-right"
+            style={{ color: 'var(--text-secondary)' }}
+          >
             Numbers earned through execution, not promises. Every metric is a
             milestone we shipped alongside real clients.
           </p>
         </motion.div>
 
-        {/* ── Asymmetric bento grid ────────────────────── */}
-        {/*
-          Layout intention:
-          Row 1 (desktop): [LARGE stat col-span-5] | [LARGE stat col-span-5] | [empty col-span-2 — breathing room]
-          Row 2 (desktop): [small] [small] split under left two cols + a label block on right
-          On mobile: single-column stacked
-        */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/[0.05] rounded-2xl overflow-hidden">
+        {/* ── Bento grid ──────────────────────────────── */}
+        <div
+          className="grid grid-cols-1 md:grid-cols-2 gap-px rounded-2xl overflow-hidden"
+          style={{ background: 'var(--border-subtle)' }}
+        >
 
-          {/* ── Large cards (first two) ─────────────────── */}
+          {/* Large cards */}
           {statistics.slice(0, 2).map((stat, i) => (
             <motion.div
               key={stat.label}
@@ -195,45 +201,61 @@ export default function CompanyOverview() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: i * 0.12 }}
-              className="group relative bg-[#0d0f15] hover:bg-[#111420] transition-colors duration-300 px-8 py-10 md:px-10 md:py-12 flex flex-col justify-between overflow-hidden"
-              style={{ minHeight: 260 }}
+              className="group relative transition-colors duration-300 px-8 py-10 md:px-10 md:py-12 flex flex-col justify-between overflow-hidden"
+              style={{
+                minHeight: 260,
+                background: 'var(--bg-secondary)',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.background = 'var(--bg-card)';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background = 'var(--bg-secondary)';
+              }}
             >
-              {/* Hover green edge */}
+              {/* Hover left edge */}
               <div
-                className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#22c578] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom"
+                className="absolute left-0 top-0 bottom-0 w-[3px] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom"
+                style={{ background: 'var(--green)' }}
                 aria-hidden
               />
 
-              {/* Index number */}
-              <span className="text-[#4a5568] text-xs font-bold tracking-[0.18em] uppercase mb-6 block">
+              <span
+                className="text-xs font-bold tracking-[0.18em] uppercase mb-6 block"
+                style={{ color: 'var(--text-muted)' }}
+              >
                 0{i + 1} —
               </span>
 
-              {/* Giant counter */}
               <div className="flex-1 flex items-center">
                 <AnimatedCounter value={stat.value} suffix={stat.suffix} large />
               </div>
 
-              {/* Label + desc */}
               <div className="mt-6 flex items-end justify-between gap-4">
                 <div>
                   <p
-                    className="text-white font-bold text-lg leading-snug whitespace-pre-line"
-                    style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                    className="font-bold text-lg leading-snug whitespace-pre-line"
+                    style={{
+                      fontFamily: "'Space Grotesk', sans-serif",
+                      color: 'var(--text-primary)',
+                    }}
                   >
                     {stat.label}
                   </p>
-                  <p className="text-[#4a5568] text-sm mt-1 leading-relaxed">{stat.desc}</p>
+                  <p
+                    className="text-sm mt-1 leading-relaxed"
+                    style={{ color: 'var(--text-muted)' }}
+                  >
+                    {stat.desc}
+                  </p>
                 </div>
-                {/* Arrow indicator */}
                 <svg
-                  width={20}
-                  height={20}
+                  width={20} height={20}
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#22c578"
                   strokeWidth={2}
                   className="flex-shrink-0 opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300"
+                  style={{ stroke: 'var(--green)' }}
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M7 7h10v10" />
                 </svg>
@@ -241,8 +263,11 @@ export default function CompanyOverview() {
             </motion.div>
           ))}
 
-          {/* ── Small cards (last two, side by side on desktop) ── */}
-          <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-px bg-white/[0.05]">
+          {/* Small cards */}
+          <div
+            className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-px"
+            style={{ background: 'var(--border-subtle)' }}
+          >
             {statistics.slice(2).map((stat, i) => (
               <motion.div
                 key={stat.label}
@@ -250,30 +275,48 @@ export default function CompanyOverview() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.24 + i * 0.12 }}
-                className="group relative bg-[#0d0f15] hover:bg-[#111420] transition-colors duration-300 px-8 py-8 md:px-10 md:py-10 overflow-hidden"
+                className="group relative transition-colors duration-300 px-8 py-8 md:px-10 md:py-10 overflow-hidden"
+                style={{ background: 'var(--bg-secondary)' }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.background = 'var(--bg-card)';
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.background = 'var(--bg-secondary)';
+                }}
               >
-                {/* Hover green bottom edge (different from large cards) */}
+                {/* Hover bottom edge */}
                 <div
-                  className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#22c578] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+                  className="absolute bottom-0 left-0 right-0 h-[3px] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+                  style={{ background: 'var(--green)' }}
                   aria-hidden
                 />
 
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <span className="text-[#4a5568] text-xs font-bold tracking-[0.18em] uppercase mb-4 block">
+                    <span
+                      className="text-xs font-bold tracking-[0.18em] uppercase mb-4 block"
+                      style={{ color: 'var(--text-muted)' }}
+                    >
                       0{i + 3} —
                     </span>
                     <AnimatedCounter value={stat.value} suffix={stat.suffix} large={false} />
                     <p
-                      className="text-white font-bold text-base leading-snug whitespace-pre-line mt-3"
-                      style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                      className="font-bold text-base leading-snug whitespace-pre-line mt-3"
+                      style={{
+                        fontFamily: "'Space Grotesk', sans-serif",
+                        color: 'var(--text-primary)',
+                      }}
                     >
                       {stat.label}
                     </p>
-                    <p className="text-[#4a5568] text-sm mt-1 leading-relaxed">{stat.desc}</p>
+                    <p
+                      className="text-sm mt-1 leading-relaxed"
+                      style={{ color: 'var(--text-muted)' }}
+                    >
+                      {stat.desc}
+                    </p>
                   </div>
 
-                  {/* Decorative tally marks */}
                   <div
                     className="flex-shrink-0 flex gap-[3px] mt-2 opacity-20 group-hover:opacity-60 transition-opacity"
                     aria-hidden
@@ -281,8 +324,9 @@ export default function CompanyOverview() {
                     {Array.from({ length: 5 }).map((_, j) => (
                       <div
                         key={j}
-                        className="w-[2px] rounded-full bg-[#22c578]"
+                        className="w-[2px] rounded-full"
                         style={{
+                          background: 'var(--green)',
                           height: j === 4 ? 2 : 18,
                           transform: j === 4 ? 'rotate(-65deg) translateY(6px)' : undefined,
                         }}
@@ -295,25 +339,27 @@ export default function CompanyOverview() {
           </div>
         </div>
 
-        {/* ── Bottom strip ────────────────────────────────── */}
+        {/* ── Bottom strip ────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="mt-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-white/[0.06] pt-8"
+          className="mt-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-8"
+          style={{ borderTop: '1px solid var(--border-subtle)' }}
         >
-          <p className="text-[#4a5568] text-sm">
+          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
             Every number above maps to a real project, a real team, a real outcome.
           </p>
           <button
-            className="flex items-center gap-2 text-sm font-semibold text-[#22c578] hover:text-white transition-colors group"
-            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+            className="flex items-center gap-2 text-sm font-semibold transition-colors group"
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--green)' }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--green)')}
           >
             See our work
             <svg
-              width={14}
-              height={14}
+              width={14} height={14}
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
