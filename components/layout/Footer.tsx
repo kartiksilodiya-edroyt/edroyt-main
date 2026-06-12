@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Twitter, Mail, MapPin, Phone, ArrowRight } from 'lucide-react';
+import Image from 'next/image'; 
 
 const quickLinks = [
   { label: 'Home',         href: '/'            },
@@ -55,16 +56,18 @@ export default function Footer() {
 
           {/* Brand */}
           <div className="space-y-5">
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 rounded-lg bg-edroyt-green flex items-center justify-center">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M8 9L4 12L8 15" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M16 9L20 12L16 15" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M13 6L11 18" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
-                </svg>
-              </div>
-              <span className="text-xl font-bold text-white">Edroyt</span>
-            </Link>
+            <Link href="/" className="flex items-center justify-center flex-shrink-0">
+  <div className="relative w-[180px] h-[50px] transition-transform duration-300 hover:scale-105">
+    <Image
+      src="/logo/edroyt-logo-removebg-preview.png"
+      alt="Edroyt"
+      fill
+      priority
+      sizes="180px"
+      className="object-contain object-left"
+    />
+  </div>
+</Link>
             <p className="text-gray-500 text-sm leading-relaxed">
               Production-grade software built by engineers who take ownership — from first commit to long-term uptime.
             </p>
