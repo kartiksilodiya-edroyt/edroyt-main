@@ -289,7 +289,7 @@ export default function ContactPage() {
                   {[
                     { icon: Mail,  label: 'Email',    value: 'hello@edroyt.com',   href: 'mailto:hello@edroyt.com' },
                     { icon: Phone, label: 'Phone',    value: '+1 (415) 555-1234',  href: 'tel:+14155551234'        },
-                    { icon: MapPin,label: 'Location', value: 'Proudly Indian 🇮🇳, Working Remotely', href: null },
+                    { icon: MapPin,label: 'Location', value: 'Indore, Madhya Pradesh', href: null },
                     { icon: Clock, label: 'Hours',    value: 'Mon–Fri, 9 AM – 6 PM IST', href: null               },
                   ].map((item) => (
                     <div key={item.label} className="flex items-center gap-3.5 group">
@@ -334,7 +334,7 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              {/* Offices */}
+              {/* Offices
               <div className="glass rounded-2xl p-6 border border-white/5">
                 <h2 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4">Global Presence</h2>
                 <div className="grid grid-cols-2 gap-x-4">
@@ -352,7 +352,7 @@ export default function ContactPage() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div> */}
             </motion.div>
           </div>
         </div>

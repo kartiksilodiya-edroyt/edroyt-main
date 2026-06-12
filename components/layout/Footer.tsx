@@ -119,7 +119,7 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start gap-2.5 text-gray-500 text-sm">
                 <MapPin size={15} className="mt-0.5 text-edroyt-green flex-shrink-0" />
-                <span>Proudly Indian 🇮🇳, Working Remotely</span>
+                <span>Indore, Madhya Pradesh</span>
               </li>
               <li>
                 <a href="mailto:hello@edroyt.com" className="flex items-center gap-2.5 text-gray-500 hover:text-edroyt-green-accent text-sm transition-colors">
