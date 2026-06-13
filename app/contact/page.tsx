@@ -1,16 +1,116 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Mail, Phone, MapPin, Send, Clock, ArrowRight, CheckCircle2, MessageSquare, Zap, Shield } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { useTheme } from 'next-themes';
+
+// ── Theme-aware color tokens ───────────────────────────────────────────────
+function useColors(isDark: boolean) {
+  return {
+    bgPrimary:          isDark ? '#08090d'                        : '#f8fafc',
+    bgSecondary:        isDark ? '#0a0f08'                        : '#eef2f7',
+
+    textPrimary:        isDark ? '#ffffff'                        : '#0f172a',
+    textMuted:          isDark ? '#9ca3af'                        : '#475569',   // gray-400 → slate-600
+    textDim:            isDark ? '#6b7280'                        : '#64748b',   // gray-500 → slate-500
+    textDimmer:         isDark ? '#374151'                        : '#94a3b8',   // gray-700 → slate-400
+
+    green:              isDark ? '#22c578'                        : '#16a34a',
+    greenAccent:        isDark ? '#22c578'                        : '#16a34a',
+    greenLight:         isDark ? '#7fffc4'                        : '#15803d',
+
+    greenBg6:           isDark ? 'rgba(34,197,120,0.06)'          : 'rgba(22,163,74,0.06)',
+    greenBg8:           isDark ? 'rgba(34,197,120,0.08)'          : 'rgba(22,163,74,0.08)',
+    greenBg10:          isDark ? 'rgba(34,197,120,0.10)'          : 'rgba(22,163,74,0.10)',
+    greenBg15:          isDark ? 'rgba(34,197,120,0.15)'          : 'rgba(22,163,74,0.12)',
+    greenBg20:          isDark ? 'rgba(34,197,120,0.20)'          : 'rgba(22,163,74,0.15)',
+    greenBorder20:      isDark ? 'rgba(34,197,120,0.20)'          : 'rgba(22,163,74,0.25)',
+    greenBorder30:      isDark ? 'rgba(34,197,120,0.30)'          : 'rgba(22,163,74,0.35)',
+    greenBorder40:      isDark ? 'rgba(34,197,120,0.40)'          : 'rgba(22,163,74,0.45)',
+
+    // Hero glows
+    heroBg:             isDark
+      ? 'linear-gradient(to bottom, rgba(34,197,120,0.08), transparent, transparent)'
+      : 'linear-gradient(to bottom, rgba(22,163,74,0.06), transparent, transparent)',
+    heroBlob:           isDark ? 'rgba(34,197,120,0.06)'          : 'rgba(22,163,74,0.05)',
+
+    // Section bg
+    formSectionBg:      isDark
+      ? 'linear-gradient(to bottom, #08090d, #0a0f08, #08090d)'
+      : 'linear-gradient(to bottom, #f8fafc, #eef2f7, #f8fafc)',
+
+    // Separator
+    separatorLine:      isDark
+      ? 'linear-gradient(to right, transparent, rgba(34,197,120,0.20), transparent)'
+      : 'linear-gradient(to right, transparent, rgba(22,163,74,0.25), transparent)',
+
+    // Glass cards
+    glassBg:            isDark ? 'rgba(255,255,255,0.02)'         : '#ffffff',
+    glassBorder:        isDark ? 'rgba(255,255,255,0.05)'         : 'rgba(0,0,0,0.09)',
+    glassShadow:        isDark ? 'none'                           : '0 2px 12px rgba(0,0,0,0.06)',
+    glassCornerGlow:    isDark ? 'rgba(34,197,120,0.06)'          : 'rgba(22,163,74,0.05)',
+
+    // Form inputs — light mode uses standard white inputs
+    inputBg:            isDark ? 'rgba(8,9,13,0.80)'              : '#f8fafc',
+    inputBorder:        isDark ? 'rgba(255,255,255,0.10)'         : 'rgba(0,0,0,0.12)',
+    inputFocusBorder:   isDark ? '#22c578'                        : '#16a34a',
+    inputText:          isDark ? '#ffffff'                        : '#0f172a',
+    inputPlaceholder:   isDark ? '#374151'                        : '#94a3b8',
+    selectBg:           isDark ? 'rgba(8,9,13,0.80)'              : '#f8fafc',
+    selectBorder:       isDark ? 'rgba(255,255,255,0.10)'         : 'rgba(0,0,0,0.12)',
+    selectText:         isDark ? '#ffffff'                        : '#0f172a',
+
+    // Label colors
+    labelColor:         isDark ? '#6b7280'                        : '#64748b',
+
+    // Trust signal icons/text
+    trustColor:         isDark ? '#6b7280'                        : '#64748b',
+
+    // Process step connector line
+    stepConnector:      isDark ? 'rgba(255,255,255,0.05)'         : 'rgba(0,0,0,0.08)',
+
+    // Direct contact item
+    contactItemHover:   isDark ? '#22c578'                        : '#16a34a',
+    contactValueColor:  isDark ? '#d1d5db'                        : '#334155',  // gray-300 → slate-700
+
+    // Success state
+    successBg:          isDark ? 'rgba(34,197,120,0.20)'          : 'rgba(22,163,74,0.15)',
+    successBorder:      isDark ? 'rgba(34,197,120,0.40)'          : 'rgba(22,163,74,0.45)',
+    successTextMuted:   isDark ? '#9ca3af'                        : '#475569',
+    successSendAnother: isDark ? '#4b5563'                        : '#64748b',
+    successSendHover:   isDark ? '#9ca3af'                        : '#334155',
+
+    // Submit button
+    btnBg:              isDark ? '#22c578'                        : '#16a34a',
+    btnHoverBg:         isDark ? '#1aad68'                        : '#15803d',
+    btnShadow:          isDark ? 'rgba(34,197,120,0.20)'          : 'rgba(22,163,74,0.20)',
+
+    // Bottom text
+    bottomTextColor:    isDark ? '#374151'                        : '#94a3b8',
+  };
+}
+
+// ── Gradient text helper ──────────────────────────────────────────────────
+function gradientTextStyle(isDark: boolean, green: string, greenLight: string): React.CSSProperties {
+  if (isDark) {
+    return {
+      background: `linear-gradient(135deg,${green},${greenLight})`,
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text',
+    };
+  }
+  return { color: green };
+}
 
 // ── Rotating sticker ─────────────────────────────────────────────────────
-function ContactSticker() {
-  const text = 'GET IN TOUCH · LET\'S BUILD · ';
+function ContactSticker({ green }: { green: string }) {
+  const text = "GET IN TOUCH · LET'S BUILD · ";
   const chars = text.split('');
 
   return (
@@ -19,7 +119,6 @@ function ContactSticker() {
       transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
       className="relative w-full h-full"
     >
-      {/* Outer rotating ring of text */}
       <svg viewBox="0 0 120 120" className="w-full h-full absolute inset-0">
         <defs>
           <path
@@ -33,7 +132,7 @@ function ContactSticker() {
             fontSize="7.5"
             fontWeight="700"
             letterSpacing="0.5"
-            fill="#22c578"
+            fill={green}
             fontFamily="monospace"
           >
             <textPath href="#circle-path" startOffset={`${(i / chars.length) * 100}%`}>
@@ -43,14 +142,19 @@ function ContactSticker() {
         ))}
       </svg>
 
-      {/* Center icon — doesn't rotate (counter-rotated) */}
       <motion.div
         animate={{ rotate: -360 }}
         transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
         className="absolute inset-0 flex items-center justify-center"
       >
-        <div className="w-10 h-10 rounded-full bg-edroyt-green/20 border border-edroyt-green/40 flex items-center justify-center">
-          <MessageSquare size={16} className="text-edroyt-green-accent" />
+        <div
+          className="w-10 h-10 rounded-full flex items-center justify-center"
+          style={{
+            background: `rgba(${green === '#22c578' ? '34,197,120' : '22,163,74'},0.20)`,
+            border: `1px solid rgba(${green === '#22c578' ? '34,197,120' : '22,163,74'},0.40)`,
+          }}
+        >
+          <MessageSquare size={16} style={{ color: green }} />
         </div>
       </motion.div>
     </motion.div>
@@ -59,7 +163,7 @@ function ContactSticker() {
 
 // ── Process steps ────────────────────────────────────────────────────────
 const processSteps = [
-  { num: '01', title: 'Send your brief',         desc: 'Tell us what you\'re building, the problem you\'re solving, and your timeline.' },
+  { num: '01', title: 'Send your brief',         desc: "Tell us what you're building, the problem you're solving, and your timeline." },
   { num: '02', title: 'Scoping call (30 min)',   desc: 'We meet, ask the hard questions, and align on scope before any proposal.' },
   { num: '03', title: 'Proposal in 48 hours',    desc: 'You get a clear, itemised proposal — no vague estimates or padded scope.' },
   { num: '04', title: 'Dedicated team assigned', desc: 'One engineer owns your project from kick-off to production. No hand-offs.' },
@@ -67,34 +171,48 @@ const processSteps = [
 
 // ── Trust signals ────────────────────────────────────────────────────────
 const trustSignals = [
-  { icon: Zap,     label: 'Response within 24 hours' },
-  { icon: Shield,  label: 'NDA on request'           },
-  { icon: CheckCircle2, label: 'No lock-in contracts' },
+  { icon: Zap,          label: 'Response within 24 hours' },
+  { icon: Shield,       label: 'NDA on request'           },
+  { icon: CheckCircle2, label: 'No lock-in contracts'     },
 ];
 
+// ── Page ──────────────────────────────────────────────────────────────────
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
 
+  const { theme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const currentTheme = mounted ? (resolvedTheme ?? theme ?? 'dark') : 'dark';
+  const isDark = currentTheme !== 'light';
+  const c = useColors(isDark);
+
   return (
-    <div className="min-h-screen bg-edroyt-dark">
+    <div className="min-h-screen" style={{ background: c.bgPrimary }}>
 
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <section className="relative pt-32 pb-24 overflow-hidden">
-        {/* Background glow */}
-        <div className="absolute inset-0 bg-gradient-to-b from-edroyt-green/8 via-transparent to-transparent pointer-events-none" />
-        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-edroyt-green/6 rounded-full blur-[100px] pointer-events-none" />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: c.heroBg }}
+        />
+        <div
+          className="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-[100px] pointer-events-none"
+          style={{ background: c.heroBlob }}
+        />
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
           <div className="flex flex-col items-center text-center">
 
-            {/* ── THE STICKER — signature element ── */}
+            {/* Rotating sticker */}
             <motion.div
               initial={{ opacity: 0, scale: 0.7 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, type: 'spring', bounce: 0.4 }}
               className="relative w-28 h-28 mb-10"
             >
-              <ContactSticker />
+              <ContactSticker green={c.green} />
             </motion.div>
 
             <motion.div
@@ -103,14 +221,25 @@ export default function ContactPage() {
               transition={{ duration: 0.6, delay: 0.15 }}
               className="max-w-3xl"
             >
-              <span className="inline-block text-edroyt-green text-xs font-bold tracking-widest uppercase mb-4">
+              <span
+                className="inline-block text-xs font-bold tracking-widest uppercase mb-4"
+                style={{ color: c.green }}
+              >
                 Contact
               </span>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+              <h1
+                className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
+                style={{ color: c.textPrimary }}
+              >
                 Tell Us What<br />
-                <span className="gradient-text">You're Solving.</span>
+                <span style={gradientTextStyle(isDark, c.green, c.greenLight)}>
+                  You're Solving.
+                </span>
               </h1>
-              <p className="text-gray-400 text-lg md:text-xl leading-relaxed max-w-xl mx-auto">
+              <p
+                className="text-lg md:text-xl leading-relaxed max-w-xl mx-auto"
+                style={{ color: c.textMuted }}
+              >
                 No forms that disappear into a void. A real engineer reads every message and responds within one business day.
               </p>
             </motion.div>
@@ -123,8 +252,12 @@ export default function ContactPage() {
               className="flex flex-wrap justify-center gap-6 mt-10"
             >
               {trustSignals.map((t) => (
-                <span key={t.label} className="flex items-center gap-2 text-sm text-gray-500">
-                  <t.icon size={14} className="text-edroyt-green" />
+                <span
+                  key={t.label}
+                  className="flex items-center gap-2 text-sm"
+                  style={{ color: c.trustColor }}
+                >
+                  <t.icon size={14} style={{ color: c.green }} />
                   {t.label}
                 </span>
               ))}
@@ -134,11 +267,14 @@ export default function ContactPage() {
       </section>
 
       {/* Separator line */}
-      <div className="h-px bg-gradient-to-r from-transparent via-edroyt-green/20 to-transparent" />
+      <div className="h-px" style={{ background: c.separatorLine }} />
 
       {/* ── Form + Info ───────────────────────────────────────────────── */}
       <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-edroyt-dark via-[#0a0f08] to-edroyt-dark pointer-events-none" />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: c.formSectionBg }}
+        />
 
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative">
           <div className="grid lg:grid-cols-[1fr_420px] gap-10 xl:gap-16 items-start">
@@ -150,15 +286,32 @@ export default function ContactPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.55 }}
             >
-              <div className="glass rounded-2xl p-7 md:p-10 border border-white/5 relative overflow-hidden">
-                {/* Subtle corner glow */}
-                <div className="absolute -top-16 -right-16 w-48 h-48 bg-edroyt-green/6 rounded-full blur-[60px] pointer-events-none" />
+              <div
+                className="rounded-2xl p-7 md:p-10 relative overflow-hidden"
+                style={{
+                  background: c.glassBg,
+                  border: `1px solid ${c.glassBorder}`,
+                  boxShadow: c.glassShadow,
+                }}
+              >
+                {/* Corner glow */}
+                <div
+                  className="absolute -top-16 -right-16 w-48 h-48 rounded-full blur-[60px] pointer-events-none"
+                  style={{ background: c.glassCornerGlow }}
+                />
 
                 {!submitted ? (
                   <>
                     <div className="mb-8">
-                      <h2 className="text-2xl font-bold text-white mb-2">Send a brief</h2>
-                      <p className="text-gray-500 text-sm">Takes 3 minutes. We'll come prepared to your first call.</p>
+                      <h2
+                        className="text-2xl font-bold mb-2"
+                        style={{ color: c.textPrimary }}
+                      >
+                        Send a brief
+                      </h2>
+                      <p className="text-sm" style={{ color: c.textDim }}>
+                        Takes 3 minutes. We'll come prepared to your first call.
+                      </p>
                     </div>
 
                     <form
@@ -167,42 +320,96 @@ export default function ContactPage() {
                     >
                       <div className="grid sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">First Name</label>
+                          <label
+                            className="block text-xs font-semibold uppercase tracking-wider mb-2"
+                            style={{ color: c.labelColor }}
+                          >
+                            First Name
+                          </label>
                           <Input
                             placeholder="Alex"
-                            className="bg-edroyt-dark/80 border-white/10 focus:border-edroyt-green text-white placeholder:text-gray-700 h-11"
+                            className="h-11"
+                            style={{
+                              background: c.inputBg,
+                              border: `1px solid ${c.inputBorder}`,
+                              color: c.inputText,
+                            }}
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Last Name</label>
+                          <label
+                            className="block text-xs font-semibold uppercase tracking-wider mb-2"
+                            style={{ color: c.labelColor }}
+                          >
+                            Last Name
+                          </label>
                           <Input
                             placeholder="Chen"
-                            className="bg-edroyt-dark/80 border-white/10 focus:border-edroyt-green text-white placeholder:text-gray-700 h-11"
+                            className="h-11"
+                            style={{
+                              background: c.inputBg,
+                              border: `1px solid ${c.inputBorder}`,
+                              color: c.inputText,
+                            }}
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Work Email</label>
+                        <label
+                          className="block text-xs font-semibold uppercase tracking-wider mb-2"
+                          style={{ color: c.labelColor }}
+                        >
+                          Work Email
+                        </label>
                         <Input
                           type="email"
                           placeholder="alex@company.com"
-                          className="bg-edroyt-dark/80 border-white/10 focus:border-edroyt-green text-white placeholder:text-gray-700 h-11"
+                          className="h-11"
+                          style={{
+                            background: c.inputBg,
+                            border: `1px solid ${c.inputBorder}`,
+                            color: c.inputText,
+                          }}
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Company</label>
+                        <label
+                          className="block text-xs font-semibold uppercase tracking-wider mb-2"
+                          style={{ color: c.labelColor }}
+                        >
+                          Company
+                        </label>
                         <Input
                           placeholder="Acme Corp"
-                          className="bg-edroyt-dark/80 border-white/10 focus:border-edroyt-green text-white placeholder:text-gray-700 h-11"
+                          className="h-11"
+                          style={{
+                            background: c.inputBg,
+                            border: `1px solid ${c.inputBorder}`,
+                            color: c.inputText,
+                          }}
                         />
                       </div>
 
                       <div className="grid sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Service Needed</label>
-                          <select className="w-full h-11 px-4 bg-edroyt-dark/80 border border-white/10 rounded-md text-white focus:border-edroyt-green focus:outline-none text-sm">
+                          <label
+                            className="block text-xs font-semibold uppercase tracking-wider mb-2"
+                            style={{ color: c.labelColor }}
+                          >
+                            Service Needed
+                          </label>
+                          <select
+                            className="w-full h-11 px-4 rounded-md text-sm focus:outline-none transition-colors"
+                            style={{
+                              background: c.selectBg,
+                              border: `1px solid ${c.selectBorder}`,
+                              color: c.selectText,
+                            }}
+                            onFocus={(e) => (e.currentTarget.style.borderColor = c.inputFocusBorder)}
+                            onBlur={(e) => (e.currentTarget.style.borderColor = c.selectBorder)}
+                          >
                             <option value="">Select…</option>
                             <option>Custom Software</option>
                             <option>Web Development</option>
@@ -213,37 +420,65 @@ export default function ContactPage() {
                           </select>
                         </div>
                         <div>
-                          <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Budget Range</label>
-                          <select className="w-full h-11 px-4 bg-edroyt-dark/80 border border-white/10 rounded-md text-white focus:border-edroyt-green focus:outline-none text-sm">
+                          <label
+                            className="block text-xs font-semibold uppercase tracking-wider mb-2"
+                            style={{ color: c.labelColor }}
+                          >
+                            Budget Range
+                          </label>
+                          <select
+                            className="w-full h-11 px-4 rounded-md text-sm focus:outline-none transition-colors"
+                            style={{
+                              background: c.selectBg,
+                              border: `1px solid ${c.selectBorder}`,
+                              color: c.selectText,
+                            }}
+                            onFocus={(e) => (e.currentTarget.style.borderColor = c.inputFocusBorder)}
+                            onBlur={(e) => (e.currentTarget.style.borderColor = c.selectBorder)}
+                          >
                             <option value="">Select…</option>
-                            <option>$25k – $50k</option>
-                            <option>$50k – $100k</option>
-                            <option>$100k – $250k</option>
-                            <option>$250k+</option>
+                            <option>Rs.25k – Rs.50k</option>
+                            <option>Rs.50k – Rs.100k</option>
+                            <option>Rs.100k – Rs.250k</option>
+                            <option>Rs.250k+</option>
                           </select>
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                        <label
+                          className="block text-xs font-semibold uppercase tracking-wider mb-2"
+                          style={{ color: c.labelColor }}
+                        >
                           Project Details
                         </label>
                         <Textarea
                           placeholder="Describe the problem you're solving, the system you need built, or the outcome you're working toward…"
                           rows={5}
-                          className="bg-edroyt-dark/80 border-white/10 focus:border-edroyt-green text-white placeholder:text-gray-700 resize-none"
+                          className="resize-none"
+                          style={{
+                            background: c.inputBg,
+                            border: `1px solid ${c.inputBorder}`,
+                            color: c.inputText,
+                          }}
                         />
                       </div>
 
-                      <Button
+                      <button
                         type="submit"
-                        className="w-full bg-edroyt-green hover:bg-edroyt-green-secondary text-white h-12 text-sm font-semibold shadow-lg shadow-edroyt-green/20 group"
+                        className="w-full h-12 rounded-xl text-sm font-semibold text-white flex items-center justify-center gap-2 transition-all group"
+                        style={{
+                          background: c.btnBg,
+                          boxShadow: `0 4px 24px ${c.btnShadow}`,
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = c.btnHoverBg)}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = c.btnBg)}
                       >
-                        <Send size={15} className="mr-2 group-hover:translate-x-0.5 transition-transform" />
+                        <Send size={15} className="group-hover:translate-x-0.5 transition-transform" />
                         Send Brief
-                      </Button>
+                      </button>
 
-                      <p className="text-center text-xs text-gray-700">
+                      <p className="text-center text-xs" style={{ color: c.bottomTextColor }}>
                         We respond within one business day. NDA available on request.
                       </p>
                     </form>
@@ -255,16 +490,30 @@ export default function ContactPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="py-12 text-center space-y-5"
                   >
-                    <div className="w-14 h-14 rounded-full bg-edroyt-green/20 border border-edroyt-green/40 flex items-center justify-center mx-auto">
-                      <CheckCircle2 size={26} className="text-edroyt-green-accent" />
+                    <div
+                      className="w-14 h-14 rounded-full flex items-center justify-center mx-auto"
+                      style={{
+                        background: c.successBg,
+                        border: `1px solid ${c.successBorder}`,
+                      }}
+                    >
+                      <CheckCircle2 size={26} style={{ color: c.green }} />
                     </div>
-                    <h3 className="text-2xl font-bold text-white">Brief received.</h3>
-                    <p className="text-gray-400 text-sm max-w-sm mx-auto leading-relaxed">
+                    <h3 className="text-2xl font-bold" style={{ color: c.textPrimary }}>
+                      Brief received.
+                    </h3>
+                    <p
+                      className="text-sm max-w-sm mx-auto leading-relaxed"
+                      style={{ color: c.successTextMuted }}
+                    >
                       Someone from our engineering team will read this and get back to you within one business day — no automated responses.
                     </p>
                     <button
                       onClick={() => setSubmitted(false)}
-                      className="text-xs text-gray-600 hover:text-gray-400 transition-colors underline underline-offset-4"
+                      className="text-xs underline underline-offset-4 transition-colors"
+                      style={{ color: c.successSendAnother }}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = c.successSendHover)}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = c.successSendAnother)}
                     >
                       Send another message
                     </button>
@@ -283,27 +532,55 @@ export default function ContactPage() {
             >
 
               {/* Direct contact */}
-              <div className="glass rounded-2xl p-6 border border-white/5">
-                <h2 className="text-base font-bold text-white mb-5 uppercase tracking-wider text-xs text-gray-500">Direct Contact</h2>
+              <div
+                className="rounded-2xl p-6"
+                style={{
+                  background: c.glassBg,
+                  border: `1px solid ${c.glassBorder}`,
+                  boxShadow: c.glassShadow,
+                }}
+              >
+                <h2
+                  className="text-[10px] font-bold uppercase tracking-widest mb-5"
+                  style={{ color: c.textDim }}
+                >
+                  Direct Contact
+                </h2>
                 <div className="space-y-4">
                   {[
-                    { icon: Mail,  label: 'Email',    value: 'hello@edroyt.com',   href: 'mailto:hello@edroyt.com' },
-                    { icon: Phone, label: 'Phone',    value: '+1 (415) 555-1234',  href: 'tel:+14155551234'        },
-                    { icon: MapPin,label: 'Location', value: 'Indore, Madhya Pradesh', href: null },
-                    { icon: Clock, label: 'Hours',    value: 'Mon–Fri, 9 AM – 6 PM IST', href: null               },
+                    { icon: Mail,   label: 'Email',    value: 'hello@edroyt.com',          href: 'mailto:hello@edroyt.com' },
+                    { icon: Phone,  label: 'Phone',    value: '+1 (415) 555-1234',           href: 'tel:+14155551234'        },
+                    { icon: MapPin, label: 'Location', value: 'Indore, Madhya Pradesh',      href: null                     },
+                    { icon: Clock,  label: 'Hours',    value: 'Mon–Fri, 9 AM – 6 PM IST',   href: null                     },
                   ].map((item) => (
                     <div key={item.label} className="flex items-center gap-3.5 group">
-                      <div className="w-8 h-8 rounded-lg bg-edroyt-green/10 flex items-center justify-center flex-shrink-0">
-                        <item.icon size={14} className="text-edroyt-green" />
+                      <div
+                        className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                        style={{ background: c.greenBg10 }}
+                      >
+                        <item.icon size={14} style={{ color: c.green }} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-0.5">{item.label}</p>
+                        <p
+                          className="text-[10px] font-bold uppercase tracking-widest mb-0.5"
+                          style={{ color: c.textDimmer }}
+                        >
+                          {item.label}
+                        </p>
                         {item.href ? (
-                          <a href={item.href} className="text-gray-300 hover:text-edroyt-green-accent text-sm transition-colors truncate block">
+                          <a
+                            href={item.href}
+                            className="text-sm transition-colors truncate block"
+                            style={{ color: c.contactValueColor }}
+                            onMouseEnter={(e) => (e.currentTarget.style.color = c.green)}
+                            onMouseLeave={(e) => (e.currentTarget.style.color = c.contactValueColor)}
+                          >
                             {item.value}
                           </a>
                         ) : (
-                          <p className="text-gray-300 text-sm">{item.value}</p>
+                          <p className="text-sm" style={{ color: c.contactValueColor }}>
+                            {item.value}
+                          </p>
                         )}
                       </div>
                     </div>
@@ -312,47 +589,61 @@ export default function ContactPage() {
               </div>
 
               {/* What happens next */}
-              <div className="glass rounded-2xl p-6 border border-white/5">
-                <h2 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-5">What Happens Next</h2>
+              <div
+                className="rounded-2xl p-6"
+                style={{
+                  background: c.glassBg,
+                  border: `1px solid ${c.glassBorder}`,
+                  boxShadow: c.glassShadow,
+                }}
+              >
+                <h2
+                  className="text-[10px] font-bold uppercase tracking-widest mb-5"
+                  style={{ color: c.textDim }}
+                >
+                  What Happens Next
+                </h2>
                 <div className="space-y-4">
                   {processSteps.map((step, i) => (
                     <div key={step.num} className="flex gap-4">
                       <div className="flex flex-col items-center">
-                        <div className="w-6 h-6 rounded-full bg-edroyt-green/15 border border-edroyt-green/30 flex items-center justify-center flex-shrink-0">
-                          <span className="text-[9px] font-mono font-bold text-edroyt-green">{step.num}</span>
+                        <div
+                          className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
+                          style={{
+                            background: c.greenBg15,
+                            border: `1px solid ${c.greenBorder30}`,
+                          }}
+                        >
+                          <span
+                            className="text-[9px] font-mono font-bold"
+                            style={{ color: c.green }}
+                          >
+                            {step.num}
+                          </span>
                         </div>
                         {i < processSteps.length - 1 && (
-                          <div className="w-px flex-1 bg-white/5 mt-1.5 mb-0" style={{ minHeight: 20 }} />
+                          <div
+                            className="w-px flex-1 mt-1.5"
+                            style={{ minHeight: 20, background: c.stepConnector }}
+                          />
                         )}
                       </div>
                       <div className="pb-4">
-                        <p className="text-white text-sm font-semibold leading-tight mb-1">{step.title}</p>
-                        <p className="text-gray-500 text-xs leading-relaxed">{step.desc}</p>
+                        <p
+                          className="text-sm font-semibold leading-tight mb-1"
+                          style={{ color: c.textPrimary }}
+                        >
+                          {step.title}
+                        </p>
+                        <p className="text-xs leading-relaxed" style={{ color: c.textDim }}>
+                          {step.desc}
+                        </p>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Offices
-              <div className="glass rounded-2xl p-6 border border-white/5">
-                <h2 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4">Global Presence</h2>
-                <div className="grid grid-cols-2 gap-x-4">
-                  {[
-                    { city: 'Mumbai',      type: 'HQ'     },
-                    { city: 'New York',    type: 'Office'  },
-                    { city: 'London',      type: 'Office'  },
-                    { city: 'Singapore',   type: 'Office'  },
-                  ].map((o) => (
-                    <div key={o.city} className="flex items-center justify-between py-2.5 border-b border-white/5 last:border-0">
-                      <span className="text-gray-400 text-sm">{o.city}</span>
-                      <span className="text-[9px] px-2 py-0.5 rounded bg-edroyt-green/10 text-edroyt-green font-bold tracking-wide">
-                        {o.type}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div> */}
             </motion.div>
           </div>
         </div>
