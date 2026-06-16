@@ -226,3 +226,12 @@
   background: rgba(22, 163, 74, 0.3);
   color: var(--text-primary);
 }
+
+.tech-ticker-inner {
+  animation: tickRight 22s linear infinite;
+}
+
+@keyframes tickRight {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0%); }
+}

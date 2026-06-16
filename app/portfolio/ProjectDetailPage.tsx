@@ -16,7 +16,7 @@ function useColors(isDark: boolean) {
     textMuted: isDark ? '#8a9bb0'                          : '#475569',
     textDim:   isDark ? '#4a5568'                          : '#64748b',
     border:    isDark ? 'rgba(255,255,255,0.07)'           : 'rgba(0,0,0,0.10)',
-    borderMid: isDark ? 'rgba(255,255,255,0.10)'           : 'rgba(0,0,0,0.13)',  // slightly stronger for section dividers
+    borderMid: isDark ? 'rgba(255,255,255,0.10)'           : 'rgba(0,0,0,0.13)',
     accent:    isDark ? '#22c578'                          : '#16a34a',
     accentDim: isDark ? 'rgba(34,197,120,0.10)'           : 'rgba(22,163,74,0.12)',
     accentBorder: isDark ? 'rgba(34,197,120,0.25)'        : 'rgba(22,163,74,0.35)',
@@ -24,6 +24,19 @@ function useColors(isDark: boolean) {
     ghost:     isDark ? 'rgba(255,255,255,0.03)'           : 'rgba(0,0,0,0.03)',
     cardBg:    isDark ? 'rgba(255,255,255,0.02)'           : '#ffffff',
   };
+}
+
+// ── Responsive hook ──────────────────────────────────────────────────────────
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${breakpoint}px)`);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    setIsMobile(mq.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, [breakpoint]);
+  return isMobile;
 }
 
 // ── Gradient text — solid dark in light mode, no fading tail ─────────────
@@ -36,7 +49,6 @@ function gradientText(isDark: boolean): React.CSSProperties {
       backgroundClip: 'text',
     };
   }
-  // Light: plain solid color — avoids the faded #6b7280 tail problem
   return { color: '#0f172a' };
 }
 
@@ -78,10 +90,11 @@ function SectionLabel({ index, label, colors }: {
 }
 
 // ── Next project block ───────────────────────────────────────────────────────
-function NextProjectBlock({ project, colors, isDark }: {
+function NextProjectBlock({ project, colors, isDark, isMobile }: {
   project: Project;
   colors: ReturnType<typeof useColors>;
   isDark: boolean;
+  isMobile: boolean;
 }) {
   const [hovered, setHovered] = useState(false);
 
@@ -92,7 +105,7 @@ function NextProjectBlock({ project, colors, isDark }: {
         onHoverEnd={() => setHovered(false)}
         style={{
           borderTop: `1px solid ${colors.borderMid}`,
-          padding: '60px 0',
+          padding: isMobile ? '40px 0' : '60px 0',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -100,7 +113,7 @@ function NextProjectBlock({ project, colors, isDark }: {
           gap: 24,
         }}
       >
-        <div>
+        <div style={{ minWidth: 0 }}>
           <div style={{
             fontSize: 11, fontWeight: 700, letterSpacing: '0.14em',
             color: colors.textMuted, textTransform: 'uppercase', marginBottom: 12,
@@ -111,9 +124,13 @@ function NextProjectBlock({ project, colors, isDark }: {
             animate={{ x: hovered ? 8 : 0 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] as any }}
             style={{
-              fontSize: 'clamp(28px, 5vw, 56px)', fontWeight: 900,
+              fontSize: isMobile ? 'clamp(24px, 8vw, 40px)' : 'clamp(28px, 5vw, 56px)',
+              fontWeight: 900,
               letterSpacing: '-0.03em', lineHeight: 1.05,
               ...gradientText(isDark),
+              // Prevent overflow on mobile
+              overflowWrap: 'break-word',
+              wordBreak: 'break-word',
             }}
           >
             {project.title}
@@ -128,14 +145,16 @@ function NextProjectBlock({ project, colors, isDark }: {
           transition={{ duration: 0.3 }}
           style={{
             flexShrink: 0,
-            width: 56, height: 56, borderRadius: '50%',
+            width: isMobile ? 44 : 56,
+            height: isMobile ? 44 : 56,
+            borderRadius: '50%',
             border: `1px solid ${hovered ? colors.accent : colors.borderMid}`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             color: hovered ? colors.accent : colors.textMuted,
             transition: 'border-color 0.3s, color 0.3s',
           }}
         >
-          <ArrowUpRight size={22} />
+          <ArrowUpRight size={isMobile ? 18 : 22} />
         </motion.div>
       </motion.div>
     </Link>
@@ -151,10 +170,11 @@ export default function ProjectDetailPage() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  const isDark  = !mounted || resolvedTheme !== 'light';
-  const colors  = useColors(isDark);
-  const project = getProjectById(id);
-  const related = project ? getRelatedProjects(id, 1) : [];
+  const isDark      = !mounted || resolvedTheme !== 'light';
+  const colors      = useColors(isDark);
+  const isMobile    = useIsMobile();
+  const project     = getProjectById(id);
+  const related     = project ? getRelatedProjects(id, 1) : [];
   const nextProject = related[0] ?? null;
 
   if (!project) {
@@ -163,6 +183,7 @@ export default function ProjectDetailPage() {
         minHeight: '100vh', background: colors.bg,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontFamily: "'Space Grotesk', sans-serif",
+        padding: '0 20px',
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
@@ -183,22 +204,21 @@ export default function ProjectDetailPage() {
   const container: React.CSSProperties = {
     maxWidth: 1080,
     margin: '0 auto',
-    padding: '0 32px',
+    padding: isMobile ? '0 20px' : '0 32px',
   };
 
   return (
     <div style={wrap}>
 
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      {/* paddingTop: 144px matches Portfolio's pt-36, clearing the fixed navbar */}
-      <div style={{ ...container, paddingTop: 144, paddingBottom: 0 }}>
+      <div style={{ ...container, paddingTop: isMobile ? 100 : 144, paddingBottom: 0 }}>
 
         {/* Back nav */}
         <motion.div
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4 }}
-          style={{ marginBottom: 40 }}
+          style={{ marginBottom: 32 }}
         >
           <Link href="/portfolio" style={{ textDecoration: 'none' }}>
             <span
@@ -216,21 +236,21 @@ export default function ProjectDetailPage() {
           </Link>
         </motion.div>
 
-        {/* Top row: title left, meta right */}
+        {/* Top row: title left, meta right — stacks on mobile */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: '1fr auto',
-          alignItems: 'flex-end',
-          gap: 40,
-          marginBottom: 48,
+          gridTemplateColumns: isMobile ? '1fr' : '1fr auto',
+          alignItems: isMobile ? 'flex-start' : 'flex-end',
+          gap: isMobile ? 20 : 40,
+          marginBottom: 40,
         }}>
           {/* Left: emoji + title */}
           <div>
             <motion.div
               variants={fadeUp(0.05)} initial="hidden" animate="show"
-              style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}
+              style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}
             >
-              <span style={{ fontSize: 28 }}>{project.emoji}</span>
+              <span style={{ fontSize: 24 }}>{project.emoji}</span>
               <span style={{
                 fontSize: 11, fontWeight: 700, letterSpacing: '0.14em',
                 textTransform: 'uppercase', color: colors.accent,
@@ -242,7 +262,7 @@ export default function ProjectDetailPage() {
             <motion.h1
               variants={fadeUp(0.1)} initial="hidden" animate="show"
               style={{
-                fontSize: 'clamp(42px, 7vw, 88px)',
+                fontSize: isMobile ? 'clamp(36px, 10vw, 64px)' : 'clamp(42px, 7vw, 88px)',
                 fontWeight: 900, letterSpacing: '-0.04em',
                 lineHeight: 0.95, margin: 0,
                 ...gradientText(isDark),
@@ -252,10 +272,14 @@ export default function ProjectDetailPage() {
             </motion.h1>
           </div>
 
-          {/* Right: year + live link */}
+          {/* Right: year + live link — left-aligned on mobile */}
           <motion.div
             variants={fadeUp(0.15)} initial="hidden" animate="show"
-            style={{ textAlign: 'right', flexShrink: 0, paddingBottom: 8 }}
+            style={{
+              textAlign: isMobile ? 'left' : 'right',
+              flexShrink: 0,
+              paddingBottom: isMobile ? 0 : 8,
+            }}
           >
             <div style={{ fontSize: 13, color: colors.textMuted, marginBottom: 10 }}>{project.year}</div>
             {project.liveUrl && (
@@ -276,20 +300,20 @@ export default function ProjectDetailPage() {
         <motion.p
           variants={fadeUp(0.2)} initial="hidden" animate="show"
           style={{
-            fontSize: 'clamp(16px, 2.2vw, 21px)',
+            fontSize: isMobile ? 15 : 'clamp(16px, 2.2vw, 21px)',
             color: colors.textMuted, lineHeight: 1.65,
-            maxWidth: 620, margin: 0, marginBottom: 48,
+            maxWidth: 620, margin: 0, marginBottom: 40,
           }}
         >
           {project.tagline}
         </motion.p>
 
-        {/* Horizontal meta strip */}
+        {/* Horizontal meta strip — 2×2 grid on mobile */}
         <motion.div
           variants={fadeUp(0.25)} initial="hidden" animate="show"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+            gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(auto-fit, minmax(130px, 1fr))',
             borderTop: `1px solid ${colors.borderMid}`,
             borderBottom: `1px solid ${colors.borderMid}`,
             background: isDark ? 'transparent' : colors.cardBg,
@@ -303,40 +327,51 @@ export default function ProjectDetailPage() {
             { label: 'Industry', value: project.industry },
             { label: 'Duration', value: project.duration },
             { label: 'Role',     value: project.role },
-          ].map(({ label, value }, i) => (
-            <div
-              key={label}
-              style={{
-                padding: '24px 0',
-                borderRight: i < 3 ? `1px solid ${colors.borderMid}` : 'none',
-                paddingRight: i < 3 ? 24 : 0,
-                paddingLeft: i > 0 ? 24 : 0,
-              }}
-            >
-              <div style={{
-                fontSize: 10, letterSpacing: '0.14em', fontWeight: 700,
-                color: colors.textDim, textTransform: 'uppercase', marginBottom: 8,
-              }}>
-                {label}
+          ].map(({ label, value }, i) => {
+            // On mobile: 2×2 grid, right border only on odd (left) columns, bottom border on first row
+            const isLeftCol  = i % 2 === 0;
+            const isTopRow   = i < 2;
+            const borderRight  = isMobile
+              ? (isLeftCol ? `1px solid ${colors.borderMid}` : 'none')
+              : (i < 3 ? `1px solid ${colors.borderMid}` : 'none');
+            const borderBottom = isMobile && isTopRow ? `1px solid ${colors.borderMid}` : 'none';
+
+            return (
+              <div
+                key={label}
+                style={{
+                  padding: isMobile ? '20px 16px' : '24px 0',
+                  borderRight,
+                  borderBottom,
+                  paddingRight: !isMobile && i < 3 ? 24 : (isMobile ? 16 : 0),
+                  paddingLeft: !isMobile && i > 0 ? 24 : (isMobile ? 16 : 0),
+                }}
+              >
+                <div style={{
+                  fontSize: 10, letterSpacing: '0.14em', fontWeight: 700,
+                  color: colors.textDim, textTransform: 'uppercase', marginBottom: 8,
+                }}>
+                  {label}
+                </div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: colors.text, lineHeight: 1.4 }}>
+                  {value}
+                </div>
               </div>
-              <div style={{ fontSize: 13, fontWeight: 600, color: colors.text, lineHeight: 1.4 }}>
-                {value}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </motion.div>
       </div>
 
       {/* ── Hero image / placeholder ──────────────────────────────────────── */}
       <motion.div
         variants={fadeUp(0.3)} initial="hidden" animate="show"
-        style={{ margin: '0 0 96px 0', ...container, paddingTop: 40 }}
+        style={{ margin: '0 0 72px 0', ...container, paddingTop: 32 }}
       >
         {project.gallery.length > 0 ? (
           <div style={{
-            borderRadius: 16, overflow: 'hidden',
+            borderRadius: isMobile ? 12 : 16, overflow: 'hidden',
             border: `1px solid ${colors.borderMid}`,
-            aspectRatio: '16/8',
+            aspectRatio: isMobile ? '4/3' : '16/8',
             boxShadow: isDark ? 'none' : '0 2px 12px rgba(0,0,0,0.08)',
           }}>
             <img
@@ -347,32 +382,29 @@ export default function ProjectDetailPage() {
           </div>
         ) : (
           <div style={{
-            borderRadius: 16, overflow: 'hidden',
+            borderRadius: isMobile ? 12 : 16, overflow: 'hidden',
             border: `1px solid ${colors.borderMid}`,
-            aspectRatio: '16/7',
+            aspectRatio: isMobile ? '4/3' : '16/7',
             background: colors.panel,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             position: 'relative',
             boxShadow: isDark ? 'none' : '0 2px 12px rgba(0,0,0,0.06)',
           }}>
-            {/* Grid lines — bumped opacity in light mode so they're actually visible */}
             <div style={{
               position: 'absolute', inset: 0,
               backgroundImage: `linear-gradient(${colors.borderMid} 1px, transparent 1px), linear-gradient(90deg, ${colors.borderMid} 1px, transparent 1px)`,
               backgroundSize: '60px 60px',
               opacity: isDark ? 1 : 0.6,
             }} />
-            {/* Big ghost emoji */}
             <div style={{
-              fontSize: 'clamp(80px, 16vw, 160px)',
+              fontSize: 'clamp(60px, 16vw, 160px)',
               opacity: isDark ? 0.12 : 0.15,
               userSelect: 'none', position: 'relative',
             }}>
               {project.emoji}
             </div>
-            {/* Accent dot */}
             <div style={{
-              position: 'absolute', bottom: 32, right: 32,
+              position: 'absolute', bottom: 24, right: 24,
               width: 10, height: 10, borderRadius: '50%',
               background: project.accent, opacity: 0.7,
             }} />
@@ -381,15 +413,20 @@ export default function ProjectDetailPage() {
       </motion.div>
 
       {/* ── 01 Overview + Challenge ───────────────────────────────────────── */}
-      <div style={{ ...container, marginBottom: 96 }}>
+      <div style={{ ...container, marginBottom: isMobile ? 64 : 96 }}>
         <motion.div variants={fadeUp()} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-60px' }}>
           <SectionLabel index="01" label="Overview" colors={colors} />
         </motion.div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80 }}>
+        {/* Side-by-side on desktop, stacked on mobile */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+          gap: isMobile ? 40 : 80,
+        }}>
           <motion.p
             variants={fadeUp(0.08)} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-60px' }}
-            style={{ fontSize: 17, lineHeight: 1.8, color: colors.text, margin: 0 }}
+            style={{ fontSize: isMobile ? 16 : 17, lineHeight: 1.8, color: colors.text, margin: 0 }}
           >
             {project.overview}
           </motion.p>
@@ -426,7 +463,7 @@ export default function ProjectDetailPage() {
       </div>
 
       {/* ── 02 Approach ──────────────────────────────────────────────────── */}
-      <div style={{ ...container, marginBottom: 96 }}>
+      <div style={{ ...container, marginBottom: isMobile ? 64 : 96 }}>
         <motion.div variants={fadeUp()} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-60px' }}>
           <SectionLabel index="02" label="Approach" colors={colors} />
         </motion.div>
@@ -438,9 +475,11 @@ export default function ProjectDetailPage() {
               variants={fadeUp(i * 0.06)} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-40px' }}
               style={{
                 display: 'grid',
-                gridTemplateColumns: '56px 1fr 1fr',
-                gap: '0 48px',
-                padding: '36px 0',
+                // On mobile: number on its own row, then title + desc stacked
+                gridTemplateColumns: isMobile ? '40px 1fr' : '56px 1fr 1fr',
+                gridTemplateRows: isMobile ? 'auto auto' : '1fr',
+                gap: isMobile ? '0 16px' : '0 48px',
+                padding: isMobile ? '28px 0' : '36px 0',
                 borderBottom: `1px solid ${colors.borderMid}`,
               }}
             >
@@ -448,13 +487,21 @@ export default function ProjectDetailPage() {
                 fontSize: 12, fontWeight: 800, color: colors.accent,
                 letterSpacing: '0.08em', paddingTop: 3,
                 fontVariantNumeric: 'tabular-nums',
+                gridRow: isMobile ? '1 / 3' : 'auto',
               }}>
                 {String(i + 1).padStart(2, '0')}
               </div>
-              <div style={{ fontSize: 17, fontWeight: 700, color: colors.text, lineHeight: 1.4 }}>
+              <div style={{
+                fontSize: isMobile ? 15 : 17,
+                fontWeight: 700, color: colors.text, lineHeight: 1.4,
+                marginBottom: isMobile ? 8 : 0,
+              }}>
                 {step.title}
               </div>
-              <div style={{ fontSize: 14, lineHeight: 1.75, color: colors.textMuted }}>
+              <div style={{
+                fontSize: 14, lineHeight: 1.75, color: colors.textMuted,
+                gridColumn: isMobile ? '2 / 3' : 'auto',
+              }}>
                 {step.description}
               </div>
             </motion.div>
@@ -463,14 +510,17 @@ export default function ProjectDetailPage() {
       </div>
 
       {/* ── 03 Results ───────────────────────────────────────────────────── */}
-      <div style={{ ...container, marginBottom: 96 }}>
+      <div style={{ ...container, marginBottom: isMobile ? 64 : 96 }}>
         <motion.div variants={fadeUp()} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-60px' }}>
           <SectionLabel index="03" label="Results" colors={colors} />
         </motion.div>
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: `repeat(${project.metrics.length}, 1fr)`,
+          // 2 columns on mobile if 4 metrics, else single row
+          gridTemplateColumns: isMobile
+            ? (project.metrics.length > 2 ? '1fr 1fr' : `repeat(${project.metrics.length}, 1fr)`)
+            : `repeat(${project.metrics.length}, 1fr)`,
           gap: 0,
           borderTop: `1px solid ${colors.borderMid}`,
           borderBottom: `1px solid ${colors.borderMid}`,
@@ -479,37 +529,48 @@ export default function ProjectDetailPage() {
           overflow: 'hidden',
           boxShadow: isDark ? 'none' : '0 1px 4px rgba(0,0,0,0.06)',
         }}>
-          {project.metrics.map((metric, i) => (
-            <motion.div
-              key={i}
-              variants={fadeUp(i * 0.07)} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-40px' }}
-              style={{
-                padding: '40px 32px',
-                borderRight: i < project.metrics.length - 1 ? `1px solid ${colors.borderMid}` : 'none',
-              }}
-            >
-              <div style={{
-                fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 900,
-                letterSpacing: '-0.03em', lineHeight: 1,
-                // Use accent color — #16a34a in light passes WCAG AA on white
-                color: colors.accent,
-                marginBottom: 10,
-              }}>
-                {metric.value}
-              </div>
-              <div style={{
-                fontSize: 11, fontWeight: 600, letterSpacing: '0.1em',
-                color: colors.textMuted, textTransform: 'uppercase',
-              }}>
-                {metric.label}
-              </div>
-            </motion.div>
-          ))}
+          {project.metrics.map((metric, i) => {
+            const totalCols = isMobile
+              ? (project.metrics.length > 2 ? 2 : project.metrics.length)
+              : project.metrics.length;
+            const isLastInRow = (i + 1) % totalCols === 0;
+            const isInLastRow = isMobile && project.metrics.length > 2
+              ? i >= project.metrics.length - (project.metrics.length % 2 === 0 ? 2 : 1)
+              : i === project.metrics.length - 1;
+
+            return (
+              <motion.div
+                key={i}
+                variants={fadeUp(i * 0.07)} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-40px' }}
+                style={{
+                  padding: isMobile ? '28px 20px' : '40px 32px',
+                  borderRight: isLastInRow ? 'none' : `1px solid ${colors.borderMid}`,
+                  borderBottom: isMobile && !isInLastRow ? `1px solid ${colors.borderMid}` : 'none',
+                }}
+              >
+                <div style={{
+                  fontSize: isMobile ? 'clamp(28px, 7vw, 40px)' : 'clamp(32px, 4vw, 52px)',
+                  fontWeight: 900,
+                  letterSpacing: '-0.03em', lineHeight: 1,
+                  color: colors.accent,
+                  marginBottom: 10,
+                }}>
+                  {metric.value}
+                </div>
+                <div style={{
+                  fontSize: 11, fontWeight: 600, letterSpacing: '0.1em',
+                  color: colors.textMuted, textTransform: 'uppercase',
+                }}>
+                  {metric.label}
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
 
       {/* ── 04 Outcome ───────────────────────────────────────────────────── */}
-      <div style={{ ...container, marginBottom: 96 }}>
+      <div style={{ ...container, marginBottom: isMobile ? 64 : 96 }}>
         <motion.div variants={fadeUp()} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-60px' }}>
           <SectionLabel index="04" label="Outcome" colors={colors} />
         </motion.div>
@@ -517,7 +578,8 @@ export default function ProjectDetailPage() {
         <motion.p
           variants={fadeUp(0.08)} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-60px' }}
           style={{
-            fontSize: 'clamp(20px, 3vw, 30px)', fontWeight: 500,
+            fontSize: isMobile ? 18 : 'clamp(20px, 3vw, 30px)',
+            fontWeight: 500,
             lineHeight: 1.6, color: colors.text,
             maxWidth: 760, margin: 0,
           }}
@@ -528,25 +590,25 @@ export default function ProjectDetailPage() {
 
       {/* ── Testimonial ──────────────────────────────────────────────────── */}
       {project.testimonial && (
-        <div style={{ ...container, marginBottom: 96 }}>
+        <div style={{ ...container, marginBottom: isMobile ? 64 : 96 }}>
           <motion.div
             variants={fadeUp()} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-60px' }}
             style={{
               borderTop: `2px solid ${colors.accent}`,
-              paddingTop: 40,
-              paddingBottom: isDark ? 0 : 40,
-              paddingLeft: isDark ? 0 : 36,
-              paddingRight: isDark ? 0 : 36,
+              paddingTop: 36,
+              paddingBottom: isDark ? 0 : 36,
+              paddingLeft: isDark ? 0 : (isMobile ? 20 : 36),
+              paddingRight: isDark ? 0 : (isMobile ? 20 : 36),
               borderRadius: isDark ? 0 : 12,
               background: isDark ? 'transparent' : colors.accentDim,
               borderLeft: isDark ? 'none' : `2px solid ${colors.accent}`,
-              borderTopLeftRadius: isDark ? 0 : 0,
             }}
           >
             <p style={{
-              fontSize: 'clamp(20px, 2.8vw, 28px)', fontStyle: 'italic',
+              fontSize: isMobile ? 18 : 'clamp(20px, 2.8vw, 28px)',
+              fontStyle: 'italic',
               fontWeight: 500, lineHeight: 1.6, color: colors.text,
-              margin: '0 0 28px',
+              margin: '0 0 24px',
             }}>
               "{project.testimonial.quote}"
             </p>
@@ -562,18 +624,19 @@ export default function ProjectDetailPage() {
 
       {/* ── Gallery ──────────────────────────────────────────────────────── */}
       {project.gallery.length > 1 && (
-        <div style={{ ...container, marginBottom: 96 }}>
+        <div style={{ ...container, marginBottom: isMobile ? 64 : 96 }}>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: project.gallery.length > 2 ? '1fr 1fr' : '1fr',
-            gap: 12,
+            // Single column on mobile, 2-col on desktop (when 3+ images)
+            gridTemplateColumns: isMobile ? '1fr' : (project.gallery.length > 2 ? '1fr 1fr' : '1fr'),
+            gap: isMobile ? 10 : 12,
           }}>
             {project.gallery.slice(1).map((src, i) => (
               <motion.div
                 key={i}
                 variants={fadeUp(i * 0.06)} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-40px' }}
                 style={{
-                  borderRadius: 12, overflow: 'hidden',
+                  borderRadius: isMobile ? 10 : 12, overflow: 'hidden',
                   border: `1px solid ${colors.borderMid}`,
                   aspectRatio: '16/10',
                   boxShadow: isDark ? 'none' : '0 2px 10px rgba(0,0,0,0.07)',
@@ -591,17 +654,17 @@ export default function ProjectDetailPage() {
       )}
 
       {/* ── Next Project ─────────────────────────────────────────────────── */}
-      <div style={{ ...container, paddingBottom: 80 }}>
+      <div style={{ ...container, paddingBottom: isMobile ? 56 : 80 }}>
         {nextProject ? (
           <motion.div
             variants={fadeUp()} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-60px' }}
           >
-            <NextProjectBlock project={nextProject} colors={colors} isDark={isDark} />
+            <NextProjectBlock project={nextProject} colors={colors} isDark={isDark} isMobile={isMobile} />
           </motion.div>
         ) : (
           <motion.div
             variants={fadeUp()} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-60px' }}
-            style={{ borderTop: `1px solid ${colors.borderMid}`, paddingTop: 60, paddingBottom: 20 }}
+            style={{ borderTop: `1px solid ${colors.borderMid}`, paddingTop: 52, paddingBottom: 20 }}
           >
             <div style={{
               fontSize: 11, fontWeight: 700, letterSpacing: '0.14em',
@@ -614,13 +677,14 @@ export default function ProjectDetailPage() {
                 whileHover={{ x: 8 }}
                 transition={{ duration: 0.3 }}
                 style={{
-                  fontSize: 'clamp(28px, 5vw, 56px)', fontWeight: 900,
+                  fontSize: isMobile ? 'clamp(24px, 8vw, 40px)' : 'clamp(28px, 5vw, 56px)',
+                  fontWeight: 900,
                   letterSpacing: '-0.03em',
-                  display: 'flex', alignItems: 'center', gap: 20,
+                  display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 20,
                   ...gradientText(isDark),
                 }}
               >
-                Back to Portfolio <ArrowRight size={32} />
+                Back to Portfolio <ArrowRight size={isMobile ? 24 : 32} />
               </motion.div>
             </Link>
           </motion.div>

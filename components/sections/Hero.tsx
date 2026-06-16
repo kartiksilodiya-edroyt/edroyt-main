@@ -747,11 +747,11 @@ export default function Hero() {
                     fontWeight: 700,
                     ...(stat.accent
                       ? {
-                          background: "linear-gradient(135deg, var(--green), var(--green-light))",
-                          WebkitBackgroundClip: "text",
-                          WebkitTextFillColor: "transparent",
-                          backgroundClip: "text",
-                        }
+                        background: "linear-gradient(135deg, var(--green), var(--green-light))",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                        backgroundClip: "text",
+                      }
                       : { color: "var(--text-primary)" }),
                   }}
                 >
@@ -805,34 +805,44 @@ export default function Hero() {
           borderTop: "1px solid var(--border-subtle)",
           borderBottom: "1px solid var(--border-subtle)",
           background: "var(--bg-secondary)",
-          padding: "14px 0",
+          padding: "13px 0",
+          position: "relative",
         }}
       >
-        <div className="ticker-inner" style={{ display: "flex", gap: 60, width: "max-content" }}>
+        {/* Fade masks */}
+        <div style={{
+          position: "absolute", left: 0, top: 0, bottom: 0, width: 80, zIndex: 2, pointerEvents: "none",
+          background: "linear-gradient(to right, var(--bg-secondary), transparent)",
+        }} />
+        <div style={{
+          position: "absolute", right: 0, top: 0, bottom: 0, width: 80, zIndex: 2, pointerEvents: "none",
+          background: "linear-gradient(to left, var(--bg-secondary), transparent)",
+        }} />
+
+        <div className="ticker-inner" style={{ display: "flex", width: "max-content" }}>
           {[...Array(2)].flatMap((_, i) =>
             [
               "AI Automation", "Cloud Native", "Full Stack Development", "DevOps & CI/CD",
               "System Integration", "Cyber Security", "Data Engineering", "Mobile Applications",
               "Digital Transformation",
-            ].map((item) => (
+            ].flatMap((item) => [
               <div
                 key={`${i}-${item}`}
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  fontSize: "0.78rem",
-                  fontWeight: 600,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  color: "var(--text-muted)",
-                  whiteSpace: "nowrap",
+                  display: "flex", alignItems: "center", gap: 10,
+                  padding: "0 28px",
+                  fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.13em",
+                  textTransform: "uppercase", color: "var(--text-muted)", whiteSpace: "nowrap",
                 }}
               >
-                <div style={{ width: 4, height: 4, borderRadius: "50%", background: "var(--green)", flexShrink: 0 }} />
+                <div style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--green)", flexShrink: 0 }} />
                 {item}
-              </div>
-            ))
+              </div>,
+              <div
+                key={`${i}-${item}-sep`}
+                style={{ width: 1, height: 14, background: "var(--border-subtle)", flexShrink: 0, alignSelf: "center" }}
+              />,
+            ])
           )}
         </div>
       </div>
@@ -841,40 +851,46 @@ export default function Hero() {
       <div
         style={{
           overflow: "hidden",
-          borderTop: "1px solid var(--border-subtle)",
           borderBottom: "1px solid var(--border-subtle)",
-          background: "var(--bg-secondary)",
-          padding: "12px 0",
+          background: "var(--bg-primary)",
+          padding: "11px 0",
+          position: "relative",
         }}
       >
-        <div className="tech-ticker-inner" style={{ display: "flex", gap: 48, width: "max-content" }}>
+        {/* Fade masks */}
+        <div style={{
+          position: "absolute", left: 0, top: 0, bottom: 0, width: 80, zIndex: 2, pointerEvents: "none",
+          background: "linear-gradient(to right, var(--bg-primary), transparent)",
+        }} />
+        <div style={{
+          position: "absolute", right: 0, top: 0, bottom: 0, width: 80, zIndex: 2, pointerEvents: "none",
+          background: "linear-gradient(to left, var(--bg-primary), transparent)",
+        }} />
+
+        <div className="tech-ticker-inner" style={{ display: "flex", width: "max-content", alignItems: "center" }}>
           {[...Array(2)].flatMap((_, i) =>
             ["React", "Next.js", "Node.js", "TypeScript", "Python", "Django", "PostgreSQL",
               "Docker", "Prisma", "Redis", "AWS", "GraphQL", "Kubernetes", "Tailwind"].map((tech) => (
-              <div
-                key={`${i}-${tech}`}
-                style={{
-                  fontSize: "0.72rem",
-                  fontWeight: 600,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  color: "var(--text-muted)",
-                  whiteSpace: "nowrap",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                }}
-              >
-                <span style={{ display: "inline-block", width: 20, height: 1, background: "var(--green)", opacity: 0.4 }} />
-                {tech}
-              </div>
-            ))
+                <div
+                  key={`${i}-${tech}`}
+                  style={{
+                    display: "flex", alignItems: "center", gap: 8,
+                    padding: "0 22px",
+                    fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.16em",
+                    textTransform: "uppercase", color: "var(--text-muted)", whiteSpace: "nowrap",
+                    fontFamily: "monospace",
+                  }}
+                >
+                  <span style={{ display: "inline-block", width: 20, height: 1, background: "var(--green)", opacity: 0.3, flexShrink: 0 }} />
+                  {tech}
+                </div>
+              ))
           )}
         </div>
       </div>
 
       {/* ── Terminal Section ──────────────────────────── */}
-      <section
+      {/* <section
         id="terminal-section"
         style={{ background: "var(--bg-secondary)", padding: "80px 40px" }}
       >
@@ -945,7 +961,7 @@ export default function Hero() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
     </>
   );
 }
