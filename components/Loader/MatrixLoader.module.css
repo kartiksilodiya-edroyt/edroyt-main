@@ -1,0 +1,224 @@
+.wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #08090d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Center UI ─────────────────────────────────── */
+.centerUI {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.centerUI.visible {
+  opacity: 1;
+}
+
+/* ── Logo ──────────────────────────────────────── */
+.logo {
+  font-family: 'Space Grotesk', monospace;
+  font-size: clamp(36px, 6vw, 52px);
+  font-weight: 700;
+  color: #22c578;
+  letter-spacing: 0.12em;
+}
+
+/* ── Terminal Box ──────────────────────────────── */
+.terminal {
+  background: rgba(8, 10, 13, 0.88);
+  border: 1px solid rgba(34, 197, 120, 0.4);
+  border-radius: 10px;
+  padding: 22px 28px;
+  min-width: 360px;
+  max-width: 90vw;
+  font-family: 'Courier New', 'Menlo', monospace;
+  font-size: 13px;
+}
+
+.terminalHeader {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+
+.dotRed    { background: #ff5f57; }
+.dotYellow { background: #febc2e; }
+.dotGreen  { background: #28c840; }
+
+.terminalTitle {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.08em;
+  margin-left: 4px;
+}
+
+/* ── Terminal Lines ────────────────────────────── */
+.line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  color: rgba(160, 180, 160, 0.8);
+  white-space: nowrap;
+}
+
+.line:last-child {
+  margin-bottom: 0;
+}
+
+.line.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.prompt { color: #22c578; }
+.cmd    { color: #e8eaf0; }
+
+.ok {
+  color: #22c578;
+  font-size: 11px;
+  margin-left: auto;
+  padding-left: 16px;
+  white-space: nowrap;
+}
+
+.statusText {
+  color: #22c578;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+/* ── Progress Bar ──────────────────────────────── */
+.progressWrap {
+  width: 360px;
+  max-width: 90vw;
+  height: 2px;
+  background: rgba(34, 197, 120, 0.12);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background: #22c578;
+  border-radius: 2px;
+  transition: width 0.15s linear;
+}
+
+/* ── Slam Text ─────────────────────────────────── */
+.slamText {
+  position: relative;
+  z-index: 10;
+  font-family: monospace;
+  font-size: 11px;
+  color: rgba(34, 197, 120, 0.5);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-top: -16px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.slamText.visible {
+  opacity: 1;
+}
+
+/* ── Exit Overlay ──────────────────────────────── */
+.exitOverlay {
+  position: absolute;
+  inset: 0;
+  background: #08090d;
+  transform: translateY(100%);
+  transition: transform 0.58s cubic-bezier(0.77, 0, 0.18, 1);
+  z-index: 20;
+}
+
+.exitOverlay.slideUp {
+  transform: translateY(-100%);
+}
+
+/* ── Site Reveal ───────────────────────────────── */
+.siteReveal {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  background: var(--bg-primary, #08090d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.siteReveal.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.revealLogo {
+  font-family: 'Space Grotesk', monospace;
+  font-size: clamp(28px, 5vw, 40px);
+  font-weight: 700;
+  color: #22c578;
+  letter-spacing: 0.14em;
+}
+
+.revealSub {
+  font-family: monospace;
+  font-size: 12px;
+  color: rgba(34, 197, 120, 0.45);
+  letter-spacing: 0.2em;
+}
+
+.replayBtn {
+  margin-top: 8px;
+  font-family: monospace;
+  font-size: 11px;
+  color: rgba(34, 197, 120, 0.45);
+  background: transparent;
+  border: 1px solid rgba(34, 197, 120, 0.18);
+  border-radius: 5px;
+  padding: 5px 14px;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.replayBtn:hover {
+  color: #22c578;
+  border-color: #22c578;
+}

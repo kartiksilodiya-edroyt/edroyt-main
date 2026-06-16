@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
+import LoaderGate from '@/components/Loader/LoaderGate';  // ← add this
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -51,9 +52,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased`}>
         <ThemeProvider>
+          <LoaderGate>
           <Navbar />
           <main>{children}</main>
           <Footer />
+          </LoaderGate>
         </ThemeProvider>
       </body>
     </html>
