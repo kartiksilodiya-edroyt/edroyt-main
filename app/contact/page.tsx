@@ -446,7 +446,7 @@ export default function ContactPage() {
               </div>
             </motion.div>
 
-            {/* ── Right: Info column — UNCHANGED ── */}
+            {/* ── Right: Info column ── */}
             <motion.div initial={{ opacity: 0, x: 32 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.2, duration: 0.55 }} className="space-y-5">
               <div className="rounded-2xl p-6" style={{ background: c.glassBg, border: `1px solid ${c.glassBorder}`, boxShadow: c.glassShadow }}>
                 <h2 className="text-[10px] font-bold uppercase tracking-widest mb-5" style={{ color: c.textDim }}>Direct Contact</h2>
