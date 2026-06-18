@@ -52,46 +52,45 @@ const timeline = [
 function useColors(isDark: boolean) {
   return {
     // Backgrounds — light mode uses clearly distinct whites/grays
-    bgPrimary:       isDark ? '#08090d'                     : '#f8fafc',
-    bgSecondary:     isDark ? '#0d0f15'                     : '#eef2f7',
+   bgPrimary:       isDark ? '#08090d'                     : '#f8fafc',
+    bgSecondary:     isDark ? '#0d0f15'                     : '#e8f0eb',
 
     // Text
     textPrimary:     isDark ? '#ffffff'                     : '#0f172a',
-    textMuted:       isDark ? '#8a9bb0'                     : '#475569',
-    textDim:         isDark ? '#4a5568'                     : '#64748b',
+    textMuted:       isDark ? '#8a9bb0'                     : '#334155',
+    textDim:         isDark ? '#4a5568'                     : '#4b6358',
 
     // Brand green
     green:           isDark ? '#22c578'                     : '#16a34a',
     greenLight:      isDark ? '#7fffc4'                     : '#15803d',
 
     // Cards — light mode uses a visible white card with a real border
-    cardBg:          isDark ? 'rgba(255,255,255,0.02)'      : '#ffffff',
+   cardBg:          isDark ? 'rgba(255,255,255,0.02)'      : '#ffffff',
     cardBgHover:     isDark ? 'rgba(34,197,120,0.04)'       : '#f0fdf4',
-    cardBorder:      isDark ? 'rgba(255,255,255,0.06)'      : 'rgba(0,0,0,0.10)',
-    cardBorderHover: isDark ? 'rgba(34,197,120,0.28)'       : 'rgba(22,163,74,0.40)',
+    cardBorder:      isDark ? 'rgba(255,255,255,0.06)'      : 'rgba(21,128,61,0.18)',
+    cardBorderHover: isDark ? 'rgba(34,197,120,0.28)'       : 'rgba(21,128,61,0.45)',
 
     // Green tints
-    greenBg:         isDark ? 'rgba(34,197,120,0.08)'       : 'rgba(22,163,74,0.10)',
-    greenBorder:     isDark ? 'rgba(34,197,120,0.15)'       : 'rgba(22,163,74,0.25)',
+   greenBg:         isDark ? 'rgba(34,197,120,0.08)'       : 'rgba(21,128,61,0.09)',
+    greenBorder:     isDark ? 'rgba(34,197,120,0.15)'       : 'rgba(21,128,61,0.30)',
     greenBg10:       isDark ? 'rgba(34,197,120,0.10)'       : 'rgba(22,163,74,0.10)',
     greenBorder20:   isDark ? 'rgba(34,197,120,0.20)'       : 'rgba(22,163,74,0.25)',
     greenBg06:       isDark ? 'rgba(34,197,120,0.06)'       : 'rgba(22,163,74,0.08)',
     greenBorder22:   isDark ? 'rgba(34,197,120,0.22)'       : 'rgba(22,163,74,0.28)',
 
     // Decorative
-    ghostStroke:     isDark ? 'rgba(34,197,120,0.06)'       : 'rgba(22,163,74,0.18)',
+    ghostStroke:     isDark ? 'rgba(34,197,120,0.06)'       : 'rgba(21,128,61,0.28)',
     glowLine:        isDark
       ? 'linear-gradient(90deg, transparent, #22c578, transparent)'
       : 'linear-gradient(90deg, transparent, #16a34a, transparent)',
     timelineLine:    isDark
       ? 'linear-gradient(90deg, transparent, rgba(34,197,120,0.3) 10%, rgba(34,197,120,0.3) 90%, transparent)'
       : 'linear-gradient(90deg, transparent, rgba(22,163,74,0.4) 10%, rgba(22,163,74,0.4) 90%, transparent)',
-    dotGlow:         isDark ? '0 0 12px rgba(34,197,120,0.5)' : '0 0 10px rgba(22,163,74,0.35)',
-    dotBorder:       isDark ? 'rgba(34,197,120,0.2)'        : 'rgba(22,163,74,0.25)',
-
+    dotGlow:         isDark ? '0 0 12px rgba(34,197,120,0.5)' : '0 0 0 3px rgba(21,128,61,0.15), 0 0 10px rgba(21,128,61,0.25)',
+    dotBorder:       isDark ? 'rgba(34,197,120,0.2)'        : 'rgba(21,128,61,0.5)',
     // Borders
-    borderSubtle:    isDark ? 'rgba(255,255,255,0.05)'      : 'rgba(0,0,0,0.08)',
-    borderSubtle06:  isDark ? 'rgba(255,255,255,0.06)'      : 'rgba(0,0,0,0.09)',
+    borderSubtle:    isDark ? 'rgba(255,255,255,0.05)'      : 'rgba(21,128,61,0.15)',
+    borderSubtle06:  isDark ? 'rgba(255,255,255,0.06)'      : 'rgba(21,128,61,0.18)',
 
     // Marquee
     marqueeStroke:   isDark ? 'rgba(34,197,120,0.25)'       : 'rgba(22,163,74,0.35)',
@@ -99,17 +98,17 @@ function useColors(isDark: boolean) {
     // CTA section
     ctaGradient:     isDark
       ? 'linear-gradient(to top, rgba(34,197,120,0.07), transparent)'
-      : 'linear-gradient(to top, rgba(22,163,74,0.06), transparent)',
-    ctaBorderLine:   isDark ? 'rgba(34,197,120,0.3)'        : 'rgba(22,163,74,0.35)',
+      : 'linear-gradient(to top, rgba(21,128,61,0.10), transparent)',
+    ctaBorderLine:   isDark ? 'rgba(34,197,120,0.3)'        : 'rgba(21,128,61,0.45)',
 
     // Outline button
-    btnBorder:       isDark ? 'rgba(255,255,255,0.10)'      : 'rgba(0,0,0,0.15)',
-    btnBorderHover:  isDark ? 'rgba(34,197,120,0.3)'        : 'rgba(22,163,74,0.40)',
-    btnBgHover:      isDark ? 'rgba(34,197,120,0.05)'       : 'rgba(22,163,74,0.06)',
+   btnBorder:       isDark ? 'rgba(255,255,255,0.10)'      : 'rgba(21,128,61,0.30)',
+    btnBorderHover:  isDark ? 'rgba(34,197,120,0.3)'        : 'rgba(21,128,61,0.55)',
+    btnBgHover:      isDark ? 'rgba(34,197,120,0.05)'       : 'rgba(21,128,61,0.07)',
 
     // Card shadow — only in light mode for depth
-    cardShadow:      isDark ? 'none'                        : '0 1px 4px rgba(0,0,0,0.06)',
-    cardShadowHover: isDark ? 'none'                        : '0 4px 16px rgba(22,163,74,0.10)',
+   cardShadow:      isDark ? 'none'                        : '0 1px 3px rgba(0,0,0,0.07), 0 0 0 1px rgba(21,128,61,0.07)',
+    cardShadowHover: isDark ? 'none'                        : '0 6px 24px rgba(21,128,61,0.13), 0 0 0 1px rgba(21,128,61,0.18)',
   };
 }
 

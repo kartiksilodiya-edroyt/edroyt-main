@@ -92,13 +92,13 @@ const THEME_COLORS = {
   },
   light: {
     bg: 0xf0f4f8,
-    nodeBase: 0x16a34a,
-    nodeMid: 0x15803d,
-    nodeDim: 0xbbf7d0,
-    nodeAccent: 0x4ade80,
-    edgeColor: 0x16a34a,
-    dustColor: 0x86efac,
-    bright: 0x166534,
+    nodeBase: 0x15803d,   // deeper green, more visible on white
+    nodeMid: 0x16a34a,
+    nodeDim: 0x4ade80,    // brighter so dimmer nodes still show
+    nodeAccent: 0x22c55e,
+    edgeColor: 0x15803d,
+    dustColor: 0x4ade80,
+    bright: 0x052e16,     // very dark green pulse = punches through light bg
   },
 };
 
@@ -173,7 +173,7 @@ function NeuralCanvas({ theme }: { theme: string }) {
       eGeo.setAttribute("position", new THREE.BufferAttribute(eArr, 3));
       const eLines = new THREE.LineSegments(
         eGeo,
-        new THREE.LineBasicMaterial({ color: colors.edgeColor, transparent: true, opacity: theme === "light" ? 0.15 : 0.1 })
+        new THREE.LineBasicMaterial({ color: colors.edgeColor, transparent: true, opacity: theme === "light" ? 0.35 : 0.1 })
       );
       scene.add(eLines);
 
@@ -242,9 +242,9 @@ function NeuralCanvas({ theme }: { theme: string }) {
       dGeo.setAttribute("position", new THREE.BufferAttribute(dPos, 3));
       scene.add(new THREE.Points(dGeo, new THREE.PointsMaterial({
         color: colors.dustColor,
-        size: 0.06,
+        size: 0.08,
         transparent: true,
-        opacity: theme === "light" ? 0.35 : 0.2
+        opacity: theme === "light" ? 0.55 : 0.2
       })));
 
       const pulseId = setInterval(() => {
@@ -502,7 +502,7 @@ export default function Hero() {
             zIndex: 1,
             background: isDark
               ? "radial-gradient(ellipse 70% 70% at 50% 50%, rgba(8,9,13,.5) 0%, rgba(8,9,13,.72) 55%, rgba(8,9,13,.96) 100%)"
-              : "radial-gradient(ellipse 70% 70% at 50% 50%, rgba(240,244,248,.3) 0%, rgba(240,244,248,.65) 55%, rgba(240,244,248,.97) 100%)",
+              : "radial-gradient(ellipse 70% 70% at 50% 50%, rgba(240,244,248,.08) 0%, rgba(240,244,248,.38) 45%, rgba(240,244,248,.82) 80%, rgba(240,244,248,.95) 100%)",
           }}
         />
 
@@ -514,12 +514,13 @@ export default function Hero() {
               display: "inline-flex",
               alignItems: "center",
               gap: 8,
-              border: "1px solid var(--border-green)",
-              background: isDark ? "rgba(34,197,120,.06)" : "rgba(22,163,74,.08)",
+              border: isDark ? "1px solid var(--border-green)" : "1px solid rgba(21,128,61,0.45)",
+              background: isDark ? "rgba(34,197,120,.06)" : "rgba(21,128,61,.1)",
               padding: "7px 18px",
               borderRadius: 100,
               marginBottom: 28,
-              backdropFilter: "blur(8px)",
+              backdropFilter: "blur(12px)",
+              boxShadow: isDark ? "none" : "0 0 0 1px rgba(21,128,61,0.08), 0 2px 8px rgba(21,128,61,0.08)",
             }}
           >
             <div
@@ -568,7 +569,7 @@ export default function Hero() {
               lineHeight: 1.03,
               letterSpacing: "-0.03em",
               marginBottom: 24,
-              color: "var(--text-primary)",
+              color: isDark ? "var(--text-primary)" : "#0f2318",
             }}
           >
             <span>We&nbsp;</span>
@@ -614,7 +615,7 @@ export default function Hero() {
             style={{
               maxWidth: 480,
               margin: "0 auto 36px",
-              color: "var(--text-secondary)",
+              color: isDark ? "var(--text-secondary)" : "#2d5a3d",
               fontSize: "1rem",
               lineHeight: 1.75,
             }}
@@ -632,8 +633,8 @@ export default function Hero() {
                   display: "flex",
                   alignItems: "center",
                   gap: 6,
-                  border: "1px solid var(--border-subtle)",
-                  background: isDark ? "rgba(255,255,255,.03)" : "rgba(0,0,0,.03)",
+                  border: isDark ? "1px solid var(--border-subtle)" : "1px solid rgba(21,128,61,0.25)",
+                  background: isDark ? "rgba(255,255,255,.03)" : "rgba(255,255,255,0.72)",
                   padding: "6px 14px",
                   borderRadius: 100,
                   fontSize: "0.72rem",
@@ -641,6 +642,8 @@ export default function Hero() {
                   color: "var(--text-secondary)",
                   cursor: "default",
                   transition: "all .2s",
+                  backdropFilter: isDark ? "none" : "blur(8px)",
+                  boxShadow: isDark ? "none" : "0 1px 4px rgba(21,128,61,0.08)",
                 }}
                 onMouseEnter={(e) => {
                   const el = e.currentTarget as HTMLElement;
@@ -734,7 +737,7 @@ export default function Hero() {
               flexWrap: "wrap",
               justifyContent: "center",
               gap: 36,
-              borderTop: "1px solid var(--border-subtle)",
+              borderTop: isDark ? "1px solid var(--border-subtle)" : "1px solid rgba(21,128,61,0.2)",
               paddingTop: 32,
             }}
           >
