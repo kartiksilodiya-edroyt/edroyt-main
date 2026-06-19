@@ -45,7 +45,7 @@ const projects = [
     id: 'atpace',
     title: 'Atpace — Grow Atpace',
     client: 'Atpace',
-    industry: 'Health & Wellness',
+    industry: 'EdTech', 
     category: 'Mobile',
     description: `A personalized growth and wellness app that recommends curated journeys, tracks progress, and surfaces insights tailored to each user's goals. Features an intelligent recommendation engine and a beautifully crafted mobile UI.`,
     accent: '#8b5cf6',
@@ -73,7 +73,7 @@ const projects = [
     id: 'meinstein',
     title: 'mEinstein',
     client: 'mEinstein',
-    industry: 'EdTech',
+    industry: 'Personal AI Assistant',
     category: 'Mobile',
     description:
       'An AI-powered learning companion app with adaptive course delivery, community frameworks, and progress tracking. Designed to make self-paced education feel personalized and engaging for every learner.',
